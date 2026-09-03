@@ -1,197 +1,309 @@
 <template>
   <div class="overview-dashboard">
-    <!-- 预警区域 -->
-    <div class="alerts-section">
-      <h3 class="section-title">
-        <span class="icon">🔔</span>
-        预警与机会
-      </h3>
+    <!-- 顶部预警区域 -->
+    <section class="alerts-section">
+      <h2>
+        <span class="icon">🚨</span>
+        风险与机会预警
+      </h2>
       <div class="alerts-grid">
         <div 
-          v-for="alert in data.alerts" 
-          :key="alert.operatorId + alert.title"
-          :class="['alert-card', alert.type, alert.level]"
+          v-for="alert in alerts" 
+          :key="alert.id"
+          class="alert-card"
+          :class="alert.type"
         >
-          <div class="alert-header">
-            <span class="alert-type">{{ getAlertTypeLabel(alert.type) }}</span>
-            <span class="alert-operator">{{ getOperatorName(alert.operatorId) }}</span>
+          <div class="alert-icon">{{ alert.type === 'risk' ? '⚠️' : '✨' }}</div>
+          <div class="alert-content">
+            <div class="alert-title">{{ alert.title }}</div>
+            <div class="alert-desc">{{ alert.description }}</div>
           </div>
-          <h4 class="alert-title">{{ alert.title }}</h4>
-          <p class="alert-desc">{{ alert.description }}</p>
+          <div class="alert-operator">{{ alert.operator }}</div>
         </div>
       </div>
-    </div>
+    </section>
     
-    <!-- 核心指标概览 -->
-    <div class="metrics-overview">
-      <h3 class="section-title">
+    <!-- 指标卡片 -->
+    <section class="metrics-section">
+      <h2>
         <span class="icon">📈</span>
-        核心指标概览 (2026 Q2)
-      </h3>
+        核心指标概览
+      </h2>
       <div class="metrics-grid">
         <div 
-          v-for="operator in data.operators" 
-          :key="operator.id"
-          class="operator-metrics-card"
-          @click="$emit('selectOperator', operator.id)"
+          v-for="metric in selectedMetricsData" 
+          :key="metric.id"
+          class="metric-card"
         >
-          <div class="card-header">
-            <span class="flag">{{ operator.logo }}</span>
-            <h4 class="name">{{ operator.name }}</h4>
-            <span class="country">{{ operator.country }}</span>
+          <div class="metric-header">
+            <span class="metric-icon">{{ metric.icon }}</span>
+            <span class="metric-name">{{ metric.name }}</span>
           </div>
-          
-          <div class="metrics-values">
-            <div 
-              v-for="metricId in selectedMetrics.slice(0, 4)" 
-              :key="metricId"
-              class="metric-item"
-            >
-              <span class="metric-label">{{ getMetricName(metricId) }}</span>
-              <span 
-                :class="['metric-value', getValueClass(operator.id, metricId)]"
-              >
-                {{ formatValue(operator.id, metricId) }}
-              </span>
-            </div>
+          <div class="metric-value">
+            {{ formatValue(metric.avgValue, metric.unit) }}
           </div>
-          
-          <div class="card-footer">
-            <span class="view-detail">点击查看详情 →</span>
+          <div class="metric-change" :class="metric.trend">
+            <span class="arrow">{{ metric.trend === 'up' ? '↑' : metric.trend === 'down' ? '↓' : '→' }}</span>
+            <span>{{ Math.abs(metric.changePercent).toFixed(1) }}%</span>
+            <span class="period">vs 上期</span>
+          </div>
+          <div class="metric-chart">
+            <MiniChart :data="metric.trendData" :color="getMetricColor(metric.trend)" />
           </div>
         </div>
       </div>
-    </div>
+    </section>
     
-    <!-- 趋势图表 -->
-    <div class="trends-section">
-      <h3 class="section-title">
+    <!-- 运营商趋势对比 -->
+    <section class="trends-section">
+      <h2>
         <span class="icon">📊</span>
-        关键趋势
-      </h3>
-      <div class="charts-grid">
-        <div class="chart-card">
-          <h4 class="chart-title">收入增长率趋势</h4>
-          <TrendChart 
-            :data="getTrendData('revenue_growth')"
-            :operators="data.operators"
-            title="收入增长率"
-            unit="%"
-          />
-        </div>
-        <div class="chart-card">
-          <h4 class="chart-title">EBITDA利润率趋势</h4>
-          <TrendChart 
-            :data="getTrendData('ebitda_margin')"
-            :operators="data.operators"
-            title="EBITDA利润率"
-            unit="%"
-          />
-        </div>
+        运营商趋势对比
+      </h2>
+      
+      <div class="chart-controls">
+        <label>
+          <span>选择指标:</span>
+          <select v-model="selectedTrendMetric">
+            <option v-for="m in selectedMetrics" :key="m" :value="m">
+              {{ getMetricName(m) }}
+            </option>
+          </select>
+        </label>
       </div>
-    </div>
+      
+      <div class="trend-chart-container">
+        <TrendChart 
+          :data="trendChartData"
+          :metricName="getMetricName(selectedTrendMetric)"
+          :operators="operators"
+        />
+      </div>
+    </section>
+    
+    <!-- 数据表格 -->
+    <section class="table-section">
+      <h2>
+        <span class="icon">📋</span>
+        详细数据表
+      </h2>
+      <div class="table-container">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>运营商</th>
+              <th v-for="m in selectedMetrics" :key="m">{{ getMetricName(m) }}</th>
+              <th>最新季度</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="op in operators" :key="op.id">
+              <td class="operator-cell">
+                <span class="flag">{{ getFlag(op.country) }}</span>
+                <span class="name">{{ op.name }}</span>
+              </td>
+              <td v-for="m in selectedMetrics" :key="m" class="value-cell">
+                {{ formatValue(getOperatorMetric(op.id, m), getMetricUnit(m)) }}
+              </td>
+              <td class="quarter-cell">{{ getLatestQuarter(op.id) }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
   </div>
 </template>
 
-<script>
-import { computed } from 'vue'
+<script setup>
+import { ref, computed } from 'vue'
 import TrendChart from './TrendChart.vue'
+import MiniChart from './MiniChart.vue'
 
-export default {
-  name: 'OverviewDashboard',
-  components: {
-    TrendChart
-  },
-  props: {
-    data: Object,
-    selectedOperator: String,
-    selectedMetrics: Array
-  },
-  emits: ['selectOperator'],
-  setup(props) {
-    const getOperatorName = (operatorId) => {
-      const operator = props.data.operators.find(op => op.id === operatorId)
-      return operator ? operator.name : operatorId
-    }
+const props = defineProps({
+  operators: Array,
+  selectedMetrics: Array,
+  quarterlyData: Array
+})
+
+const selectedTrendMetric = ref(props.selectedMetrics[0] || 'revenue')
+
+// 预警数据
+const alerts = computed(() => {
+  const alertList = []
+  
+  props.operators.forEach(op => {
+    const latestData = props.quarterlyData
+      .filter(d => d.operatorId === op.id)
+      .sort((a, b) => b.quarter.localeCompare(a.quarter))[0]
     
-    const getMetricName = (metricId) => {
-      const metric = props.data.metrics.find(m => m.id === metricId)
-      return metric ? metric.name : metricId
-    }
-    
-    const getMetric = (metricId) => {
-      return props.data.metrics.find(m => m.id === metricId)
-    }
-    
-    const getLatestData = (operatorId) => {
-      const operatorData = props.data.quarterlyData
-        .filter(d => d.operatorId === operatorId)
-        .sort((a, b) => a.period.localeCompare(b.period))
-      return operatorData[operatorData.length - 1]
-    }
-    
-    const formatValue = (operatorId, metricId) => {
-      const latest = getLatestData(operatorId)
-      if (!latest || !latest.data[metricId]) return '-'
-      
-      const value = latest.data[metricId]
-      const metric = getMetric(metricId)
-      
-      if (metricId === 'fcf') {
-        return `$${value}M`
-      }
-      return `${value.toFixed(1)}${metric?.unit || ''}`
-    }
-    
-    const getValueClass = (operatorId, metricId) => {
-      const latest = getLatestData(operatorId)
-      if (!latest || !latest.data[metricId]) return ''
-      
-      const value = latest.data[metricId]
-      const metric = getMetric(metricId)
-      
-      if (metric?.higherIsBetter) {
-        if (value > 10) return 'positive'
-        if (value < 0) return 'negative'
-      } else {
-        if (value < 20) return 'positive'
-        if (value > 50) return 'negative'
-      }
-      return 'neutral'
-    }
-    
-    const getAlertTypeLabel = (type) => {
-      const labels = {
-        opportunity: '机会',
-        risk: '风险',
-        info: '信息'
-      }
-      return labels[type] || type
-    }
-    
-    const getTrendData = (metricId) => {
-      const periods = ['2025 Q3', '2025 Q4', '2026 Q1', '2026 Q2']
-      return periods.map(period => {
-        const periodData = { period }
-        props.data.operators.forEach(operator => {
-          const data = props.data.quarterlyData.find(
-            d => d.operatorId === operator.id && d.period === period
-          )
-          periodData[operator.id] = data ? data.data[metricId] : null
+    if (latestData) {
+      // 检测风险
+      if (latestData.subscriberGrowth < 0) {
+        alertList.push({
+          id: `${op.id}-sub-decline`,
+          type: 'risk',
+          title: '订户流失',
+          description: `订户增长率 ${latestData.subscriberGrowth.toFixed(1)}%`,
+          operator: op.name
         })
-        return periodData
-      })
+      }
+      if (latestData.debtRatio > 70) {
+        alertList.push({
+          id: `${op.id}-high-debt`,
+          type: 'risk',
+          title: '高负债风险',
+          description: `负债率 ${latestData.debtRatio.toFixed(1)}%`,
+          operator: op.name
+        })
+      }
+      if (latestData.churnRate > 5) {
+        alertList.push({
+          id: `${op.id}-high-churn`,
+          type: 'risk',
+          title: '高流失率',
+          description: `流失率 ${latestData.churnRate.toFixed(1)}%`,
+          operator: op.name
+        })
+      }
+      // 检测机会
+      if (latestData.ebitdaMargin > 40) {
+        alertList.push({
+          id: `${op.id}-high-margin`,
+          type: 'opportunity',
+          title: '高盈利能力',
+          description: `EBITDA利润率 ${latestData.ebitdaMargin.toFixed(1)}%`,
+          operator: op.name
+        })
+      }
+      if (latestData.subscriberGrowth > 10) {
+        alertList.push({
+          id: `${op.id}-high-growth`,
+          type: 'opportunity',
+          title: '高增长',
+          description: `订户增长 ${latestData.subscriberGrowth.toFixed(1)}%`,
+          operator: op.name
+        })
+      }
     }
+  })
+  
+  return alertList.slice(0, 6)
+})
+
+// 指标数据
+const selectedMetricsData = computed(() => {
+  const metricConfigs = {
+    revenue: { name: '营业收入', icon: '💰', unit: '亿美元' },
+    ebitdaMargin: { name: 'EBITDA利润率', icon: '📈', unit: '%' },
+    subscriberGrowth: { name: '订户增长率', icon: '👥', unit: '%' },
+    arpu: { name: 'ARPU', icon: '💵', unit: '美元' },
+    capexRatio: { name: '资本开支比', icon: '🏗️', unit: '%' },
+    debtRatio: { name: '负债率', icon: '📊', unit: '%' },
+    fcf: { name: '自由现金流', icon: '💸', unit: '亿美元' },
+    churnRate: { name: '流失率', icon: '📉', unit: '%' }
+  }
+  
+  return props.selectedMetrics.map(metricId => {
+    const config = metricConfigs[metricId] || { name: metricId, icon: '📊', unit: '' }
+    
+    // 计算平均值和趋势
+    const values = props.quarterlyData.map(d => d[metricId]).filter(v => v != null)
+    const avgValue = values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0
+    
+    // 计算变化
+    const sortedData = [...props.quarterlyData].sort((a, b) => b.quarter.localeCompare(a.quarter))
+    const latest = sortedData[0]?.[metricId] || 0
+    const previous = sortedData[1]?.[metricId] || latest
+    const changePercent = previous !== 0 ? ((latest - previous) / Math.abs(previous)) * 100 : 0
+    
+    const trend = changePercent > 2 ? 'up' : changePercent < -2 ? 'down' : 'stable'
+    
+    // 趋势数据
+    const trendData = sortedData.slice(0, 8).reverse().map(d => d[metricId] || 0)
     
     return {
-      getOperatorName,
-      getMetricName,
-      formatValue,
-      getValueClass,
-      getAlertTypeLabel,
-      getTrendData
+      id: metricId,
+      ...config,
+      avgValue,
+      changePercent,
+      trend,
+      trendData
     }
+  })
+})
+
+// 趋势图数据
+const trendChartData = computed(() => {
+  return props.quarterlyData
+    .filter(d => props.operators.some(op => op.id === d.operatorId))
+    .sort((a, b) => a.quarter.localeCompare(b.quarter))
+})
+
+// 辅助方法
+const getMetricName = (metricId) => {
+  const names = {
+    revenue: '营业收入',
+    ebitdaMargin: 'EBITDA利润率',
+    subscriberGrowth: '订户增长率',
+    arpu: 'ARPU',
+    capexRatio: '资本开支比',
+    debtRatio: '负债率',
+    fcf: '自由现金流',
+    churnRate: '流失率'
   }
+  return names[metricId] || metricId
+}
+
+const getMetricUnit = (metricId) => {
+  const units = {
+    revenue: '亿美元',
+    ebitdaMargin: '%',
+    subscriberGrowth: '%',
+    arpu: '美元',
+    capexRatio: '%',
+    debtRatio: '%',
+    fcf: '亿美元',
+    churnRate: '%'
+  }
+  return units[metricId] || ''
+}
+
+const getMetricColor = (trend) => {
+  return trend === 'up' ? '#4ade80' : trend === 'down' ? '#f87171' : '#60a5fa'
+}
+
+const getFlag = (country) => {
+  const flags = {
+    'South Africa': '🇿🇦',
+    'Nigeria': '🇳🇬',
+    'Zimbabwe': '🇿🇼',
+    'Kenya': '🇰🇪',
+    'Ghana': '🇬🇭',
+    'Tanzania': '🇹🇿'
+  }
+  return flags[country] || '🌍'
+}
+
+const formatValue = (value, unit) => {
+  if (value == null) return '-'
+  if (unit === '%') return value.toFixed(1) + '%'
+  if (unit === '亿美元') return '$' + value.toFixed(2) + 'B'
+  if (unit === '美元') return '$' + value.toFixed(2)
+  return value.toFixed(2)
+}
+
+const getOperatorMetric = (operatorId, metricId) => {
+  const data = props.quarterlyData
+    .filter(d => d.operatorId === operatorId)
+    .sort((a, b) => b.quarter.localeCompare(a.quarter))[0]
+  return data?.[metricId] || 0
+}
+
+const getLatestQuarter = (operatorId) => {
+  const data = props.quarterlyData
+    .filter(d => d.operatorId === operatorId)
+    .sort((a, b) => b.quarter.localeCompare(a.quarter))[0]
+  return data?.quarter || '-'
 }
 </script>
 
@@ -199,220 +311,234 @@ export default {
 .overview-dashboard {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 24px;
 }
 
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 15px;
-}
-
-.section-title .icon {
-  font-size: 20px;
-}
-
-/* 预警区域 */
-.alerts-section {
-  background: rgba(255, 255, 255, 0.03);
+section {
+  background: rgba(30, 41, 59, 0.5);
   border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
   padding: 20px;
 }
 
+h2 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon {
+  font-size: 18px;
+}
+
+/* 预警区域 */
 .alerts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 12px;
 }
 
 .alert-card {
-  padding: 15px;
-  border-radius: 10px;
-  border-left: 4px solid;
-}
-
-.alert-card.opportunity {
-  background: rgba(0, 200, 150, 0.1);
-  border-left-color: #00c896;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border: 1px solid;
 }
 
 .alert-card.risk {
-  background: rgba(255, 100, 100, 0.1);
-  border-left-color: #ff6464;
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
-.alert-card.info {
-  background: rgba(100, 150, 255, 0.1);
-  border-left-color: #6496ff;
+.alert-card.opportunity {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
 }
 
-.alert-header {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 11px;
+.alert-icon {
+  font-size: 20px;
 }
 
-.alert-type {
-  padding: 2px 8px;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  text-transform: uppercase;
-}
-
-.alert-operator {
-  color: #888;
+.alert-content {
+  flex: 1;
 }
 
 .alert-title {
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 600;
-  color: #fff;
-  margin-bottom: 5px;
+  color: #f1f5f9;
 }
 
 .alert-desc {
   font-size: 12px;
-  color: #aaa;
-  line-height: 1.5;
+  color: #94a3b8;
+  margin-top: 2px;
 }
 
-/* 核心指标概览 */
-.metrics-overview {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  padding: 20px;
+.alert-operator {
+  font-size: 11px;
+  color: #64748b;
+  padding: 4px 8px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 4px;
 }
 
+/* 指标卡片 */
 .metrics-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
 }
 
-.operator-metrics-card {
-  background: rgba(255, 255, 255, 0.05);
+.metric-card {
+  background: rgba(15, 23, 42, 0.5);
   border-radius: 10px;
-  padding: 15px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 16px;
+  transition: all 0.2s ease;
 }
 
-.operator-metrics-card:hover {
-  background: rgba(255, 255, 255, 0.1);
-  transform: translateY(-3px);
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+.metric-card:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  transform: translateY(-2px);
 }
 
-.card-header {
+.metric-header {
   display: flex;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 15px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
-.flag {
-  font-size: 24px;
+.metric-icon {
+  font-size: 20px;
 }
 
-.name {
-  flex: 1;
-  font-size: 14px;
-  font-weight: 600;
-  color: #fff;
-}
-
-.country {
-  font-size: 11px;
-  color: #888;
-  padding: 3px 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 10px;
-}
-
-.metrics-values {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-bottom: 15px;
-}
-
-.metric-item {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.metric-label {
-  font-size: 11px;
-  color: #888;
+.metric-name {
+  font-size: 13px;
+  color: #94a3b8;
 }
 
 .metric-value {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 28px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin-bottom: 8px;
 }
 
-.metric-value.positive {
-  color: #00c896;
+.metric-change {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  margin-bottom: 12px;
 }
 
-.metric-value.negative {
-  color: #ff6464;
+.metric-change.up {
+  color: #4ade80;
 }
 
-.metric-value.neutral {
-  color: #e0e0e0;
+.metric-change.down {
+  color: #f87171;
 }
 
-.card-footer {
-  text-align: center;
+.metric-change.stable {
+  color: #60a5fa;
 }
 
-.view-detail {
-  font-size: 11px;
-  color: #00d9ff;
+.period {
+  color: #64748b;
 }
 
-/* 趋势图表 */
-.trends-section {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  padding: 20px;
+.metric-chart {
+  height: 40px;
 }
 
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-  gap: 20px;
+/* 趋势图 */
+.chart-controls {
+  margin-bottom: 16px;
 }
 
-.chart-card {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 15px;
-}
-
-.chart-title {
+.chart-controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
   font-size: 13px;
-  color: #888;
-  margin-bottom: 10px;
+  color: #94a3b8;
 }
 
-@media (max-width: 768px) {
-  .alerts-grid,
-  .metrics-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .charts-grid {
-    grid-template-columns: 1fr;
-  }
+.chart-controls select {
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  background: rgba(30, 41, 59, 0.5);
+  color: #f1f5f9;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.trend-chart-container {
+  height: 300px;
+}
+
+/* 数据表格 */
+.table-container {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.data-table th,
+.data-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.data-table th {
+  font-size: 12px;
+  font-weight: 600;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: rgba(15, 23, 42, 0.5);
+}
+
+.data-table td {
+  font-size: 14px;
+  color: #e2e8f0;
+}
+
+.operator-cell {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.flag {
+  font-size: 16px;
+}
+
+.value-cell {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+}
+
+.quarter-cell {
+  color: #94a3b8;
+  font-size: 12px;
+}
+
+.data-table tbody tr:hover {
+  background: rgba(59, 130, 246, 0.05);
 }
 </style>

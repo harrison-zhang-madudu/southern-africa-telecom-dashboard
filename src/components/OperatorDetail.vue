@@ -1,261 +1,441 @@
 <template>
   <div class="operator-detail">
-    <!-- 运营商基本信息 -->
-    <div class="info-header">
-      <div class="operator-info">
-        <span class="flag">{{ operator.logo }}</span>
-        <div class="info-text">
-          <h2>{{ operator.name }}</h2>
-          <p class="country">{{ operator.country }} · {{ operator.region }}</p>
-          <p class="description">{{ operator.description }}</p>
-        </div>
-      </div>
+    <!-- 运营商选择 -->
+    <section class="selector-section">
+      <h2>
+        <span class="icon">🔍</span>
+        选择运营商查看详情
+      </h2>
       
-      <div class="latest-report">
-        <span class="label">最新财报：</span>
-        <span class="period">{{ operator.latestReport.period }}</span>
-        <span class="date">发布于 {{ operator.latestReport.publishDate }}</span>
-        <a :href="operator.latestReport.reportUrl" target="_blank" class="report-link">
-          查看原文 →
-        </a>
-      </div>
-    </div>
-    
-    <!-- 子公司信息 -->
-    <div class="subsidiaries-section" v-if="operator.subsidiaries && operator.subsidiaries.length > 0">
-      <h3 class="section-title">
-        <span class="icon">🏛</span>
-        旗下子公司
-      </h3>
-      <div class="subsidiaries-list">
-        <span 
-          v-for="sub in operator.subsidiaries" 
-          :key="sub"
-          class="subsidiary-tag"
+      <div class="operator-tabs">
+        <button 
+          v-for="op in operators" 
+          :key="op.id"
+          :class="{ active: selectedOperator === op.id }"
+          @click="selectedOperator = op.id"
         >
-          {{ sub }}
-        </span>
+          {{ getFlag(op.country) }} {{ op.name }}
+        </button>
       </div>
-    </div>
+    </section>
     
-    <!-- 核心指标仪表盘 -->
-    <div class="metrics-dashboard">
-      <h3 class="section-title">
-        <span class="icon">📊</span>
-        核心指标仪表盘
-      </h3>
-      <div class="gauges-grid">
-        <div 
-          v-for="metric in metrics.slice(0, 4)" 
-          :key="metric.id"
-          class="gauge-card"
-        >
-          <GaugeChart 
-            :value="getLatestMetricValue(metric.id)"
-            :title="metric.name"
-            :unit="metric.unit"
-            :min="getMetricRange(metric.id).min"
-            :max="getMetricRange(metric.id).max"
-            :higherIsBetter="metric.higherIsBetter"
-          />
+    <template v-if="currentOperator">
+      <!-- 基本信息 -->
+      <section class="info-section">
+        <div class="info-header">
+          <div class="info-main">
+            <span class="flag">{{ getFlag(currentOperator.country) }}</span>
+            <div class="name-info">
+              <h2>{{ currentOperator.name }}</h2>
+              <span class="country">{{ currentOperator.country }}</span>
+            </div>
+          </div>
+          <div class="info-stats">
+            <div class="stat">
+              <span class="stat-label">用户规模</span>
+              <span class="stat-value">{{ formatNumber(currentOperator.subscribers) }}</span>
+            </div>
+            <div class="stat">
+              <span class="stat-label">最新季度</span>
+              <span class="stat-value">{{ latestQuarter }}</span>
+            </div>
+          </div>
         </div>
-      </div>
-    </div>
-    
-    <!-- 指标趋势图 -->
-    <div class="trends-section">
-      <h3 class="section-title">
-        <span class="icon">📈</span>
-        指标趋势
-      </h3>
-      <div class="trend-charts-grid">
-        <div 
-          v-for="metric in metrics.slice(0, 4)" 
-          :key="metric.id"
-          class="trend-card"
-        >
-          <h4 class="trend-title">{{ metric.name }}</h4>
-          <SingleTrendChart 
-            :data="getMetricTrendData(metric.id)"
-            :title="metric.name"
-            :unit="metric.unit"
-          />
-        </div>
-      </div>
-    </div>
-    
-    <!-- 根因分析 -->
-    <div class="root-cause-section" v-if="rootCauseAnalysis && rootCauseAnalysis.length > 0">
-      <h3 class="section-title">
-        <span class="icon">🔬</span>
-        根因分析
-      </h3>
+      </section>
       
-      <div 
-        v-for="analysis in rootCauseAnalysis" 
-        :key="analysis.metric"
-        class="analysis-card"
-      >
-        <div class="analysis-header">
-          <h4 class="metric-name">{{ getMetricName(analysis.metric) }}</h4>
-          <span :class="['change-value', analysis.change.startsWith('+') ? 'positive' : 'negative']">
-            {{ analysis.change }}
-          </span>
+      <!-- 核心指标仪表盘 -->
+      <section class="gauges-section">
+        <h3>
+          <span class="icon">📊</span>
+          核心指标仪表盘
+        </h3>
+        
+        <div class="gauges-grid">
+          <div 
+            v-for="metric in gaugeMetrics" 
+            :key="metric.id"
+            class="gauge-card"
+          >
+            <GaugeChart 
+              :value="metric.value"
+              :max="metric.max"
+              :title="metric.name"
+              :unit="metric.unit"
+              :color="metric.color"
+            />
+          </div>
+        </div>
+      </section>
+      
+      <!-- 指标趋势 -->
+      <section class="trends-section">
+        <h3>
+          <span class="icon">📈</span>
+          指标趋势
+        </h3>
+        
+        <div class="metric-tabs">
+          <button 
+            v-for="m in selectedMetrics" 
+            :key="m"
+            :class="{ active: activeMetric === m }"
+            @click="activeMetric = m"
+          >
+            {{ getMetricName(m) }}
+          </button>
         </div>
         
-        <div class="analysis-content">
-          <!-- 主要原因 -->
-          <div class="causes-section">
-            <h5 class="causes-title">
-              <span class="icon">🎯</span>
-              主要驱动因素
-            </h5>
-            <div class="causes-list">
-              <div 
-                v-for="cause in analysis.primaryCauses" 
-                :key="cause.cause"
-                class="cause-item primary"
-              >
-                <div class="cause-header">
-                  <span class="cause-name">{{ cause.cause }}</span>
-                  <span :class="['impact-badge', cause.impact]">
-                    {{ getImpactLabel(cause.impact) }}影响
-                  </span>
-                </div>
-                <div class="cause-contribution">
-                  贡献度：<strong>{{ cause.contribution }}</strong>
-                </div>
-                <div class="cause-evidence">
-                  <span class="evidence-icon">💡</span>
-                  {{ cause.evidence }}
+        <div class="trend-chart-container">
+          <SingleTrendChart 
+            :data="operatorTrendData"
+            :metricName="getMetricName(activeMetric)"
+            :metricUnit="getMetricUnit(activeMetric)"
+          />
+        </div>
+      </section>
+      
+      <!-- 根因分析 -->
+      <section class="root-cause-section">
+        <h3>
+          <span class="icon">🔬</span>
+          根因分析
+        </h3>
+        
+        <div class="root-cause-content">
+          <!-- 指标变化概述 -->
+          <div class="change-summary">
+            <div class="change-card" :class="overallChange.trend">
+              <div class="change-icon">
+                {{ overallChange.trend === 'up' ? '📈' : overallChange.trend === 'down' ? '📉' : '➡️' }}
+              </div>
+              <div class="change-info">
+                <div class="change-label">{{ getMetricName(activeMetric) }}</div>
+                <div class="change-value">
+                  {{ overallChange.change > 0 ? '+' : '' }}{{ overallChange.change.toFixed(2) }}
+                  <span class="change-percent">({{ overallChange.percent.toFixed(1) }}%)</span>
                 </div>
               </div>
             </div>
           </div>
           
-          <!-- 次要原因 -->
-          <div class="causes-section secondary" v-if="analysis.secondaryCauses && analysis.secondaryCauses.length > 0">
-            <h5 class="causes-title">
-              <span class="icon">📌</span>
-              次要因素
-            </h5>
-            <div class="causes-list">
+          <!-- 主要因素 -->
+          <div class="factors-section">
+            <h4>主要影响因素</h4>
+            <div class="factors-list">
               <div 
-                v-for="cause in analysis.secondaryCauses" 
-                :key="cause.cause"
-                class="cause-item secondary"
+                v-for="factor in rootCauseFactors" 
+                :key="factor.id"
+                class="factor-item"
+                :class="factor.impact"
               >
-                <div class="cause-header">
-                  <span class="cause-name">{{ cause.cause }}</span>
+                <div class="factor-header">
+                  <span class="factor-icon">{{ factor.icon }}</span>
+                  <span class="factor-name">{{ factor.name }}</span>
+                  <span class="factor-contribution">{{ factor.contribution }}%</span>
                 </div>
-                <div class="cause-contribution">
-                  贡献度：<strong>{{ cause.contribution }}</strong>
+                <div class="factor-bar">
+                  <div 
+                    class="bar-fill"
+                    :style="{ width: factor.contribution + '%' }"
+                  ></div>
                 </div>
-                <div class="cause-evidence">
-                  <span class="evidence-icon">💡</span>
-                  {{ cause.evidence }}
-                </div>
+                <div class="factor-desc">{{ factor.description }}</div>
               </div>
             </div>
           </div>
           
           <!-- 风险与机会 -->
-          <div class="risk-opportunity-section">
-            <div class="risks" v-if="analysis.risks && analysis.risks.length > 0">
-              <h5 class="risk-title">
-                <span class="icon">⚠️</span>
-                潜在风险
-              </h5>
-              <ul class="risk-list">
-                <li v-for="risk in analysis.risks" :key="risk">{{ risk }}</li>
+          <div class="risk-opportunity">
+            <div class="risks">
+              <h4>⚠️ 潜在风险</h4>
+              <ul>
+                <li v-for="risk in risks" :key="risk">{{ risk }}</li>
               </ul>
             </div>
-            
-            <div class="opportunities" v-if="analysis.opportunities && analysis.opportunities.length > 0">
-              <h5 class="opportunity-title">
-                <span class="icon">🌟</span>
-                发展机会
-              </h5>
-              <ul class="opportunity-list">
-                <li v-for="opp in analysis.opportunities" :key="opp">{{ opp }}</li>
+            <div class="opportunities">
+              <h4>✨ 改善机会</h4>
+              <ul>
+                <li v-for="opp in opportunities" :key="opp">{{ opp }}</li>
               </ul>
             </div>
           </div>
         </div>
+      </section>
+    </template>
+    
+    <div v-else class="no-selection">
+      <div class="placeholder">
+        <span class="icon">👈</span>
+        <p>请选择一个运营商查看详细分析</p>
       </div>
     </div>
   </div>
 </template>
 
-<script>
-import { computed } from 'vue'
+<script setup>
+import { ref, computed } from 'vue'
 import GaugeChart from './GaugeChart.vue'
 import SingleTrendChart from './SingleTrendChart.vue'
 
-export default {
-  name: 'OperatorDetail',
-  components: {
-    GaugeChart,
-    SingleTrendChart
-  },
-  props: {
-    operator: Object,
-    operatorData: Array,
-    metrics: Array,
-    rootCauseAnalysis: Array
-  },
-  setup(props) {
-    const getMetricName = (metricId) => {
-      const metric = props.metrics.find(m => m.id === metricId)
-      return metric ? metric.name : metricId
+const props = defineProps({
+  operators: Array,
+  selectedMetrics: Array,
+  quarterlyData: Array
+})
+
+const selectedOperator = ref(null)
+const activeMetric = ref(props.selectedMetrics[0] || 'revenue')
+
+// 当前运营商信息
+const currentOperator = computed(() => {
+  if (!selectedOperator.value) return null
+  return props.operators.find(op => op.id === selectedOperator.value)
+})
+
+// 运营商季度数据
+const operatorQuarterlyData = computed(() => {
+  if (!selectedOperator.value) return []
+  return props.quarterlyData
+    .filter(d => d.operatorId === selectedOperator.value)
+    .sort((a, b) => a.quarter.localeCompare(b.quarter))
+})
+
+// 最新季度
+const latestQuarter = computed(() => {
+  if (!operatorQuarterlyData.value.length) return '-'
+  const sorted = [...operatorQuarterlyData.value].sort((a, b) => b.quarter.localeCompare(a.quarter))
+  return sorted[0]?.quarter || '-'
+})
+
+// 仪表盘指标
+const gaugeMetrics = computed(() => {
+  if (!operatorQuarterlyData.value.length) return []
+  
+  const latest = operatorQuarterlyData.value[operatorQuarterlyData.value.length - 1]
+  
+  return [
+    { 
+      id: 'ebitdaMargin',
+      name: 'EBITDA利润率',
+      value: latest?.ebitdaMargin || 0,
+      max: 60,
+      unit: '%',
+      color: '#10b981'
+    },
+    { 
+      id: 'subscriberGrowth',
+      name: '订户增长率',
+      value: Math.max(0, latest?.subscriberGrowth || 0),
+      max: 20,
+      unit: '%',
+      color: '#3b82f6'
+    },
+    { 
+      id: 'arpu',
+      name: 'ARPU',
+      value: latest?.arpu || 0,
+      max: 15,
+      unit: '$',
+      color: '#f59e0b'
+    },
+    { 
+      id: 'debtRatio',
+      name: '负债率',
+      value: 100 - (latest?.debtRatio || 0),
+      max: 100,
+      unit: '%',
+      color: latest?.debtRatio > 70 ? '#ef4444' : '#10b981'
+    }
+  ]
+})
+
+// 趋势数据
+const operatorTrendData = computed(() => {
+  return operatorQuarterlyData.value.map(d => ({
+    quarter: d.quarter,
+    value: d[activeMetric.value] || 0
+  }))
+})
+
+// 整体变化
+const overallChange = computed(() => {
+  if (operatorTrendData.value.length < 2) {
+    return { change: 0, percent: 0, trend: 'stable' }
+  }
+  
+  const data = operatorTrendData.value
+  const latest = data[data.length - 1].value
+  const previous = data[data.length - 2].value
+  const change = latest - previous
+  const percent = previous !== 0 ? (change / Math.abs(previous)) * 100 : 0
+  
+  return {
+    change,
+    percent,
+    trend: change > 0 ? 'up' : change < 0 ? 'down' : 'stable'
+  }
+})
+
+// 根因分析因素
+const rootCauseFactors = computed(() => {
+  if (!currentOperator.value) return []
+  
+  // 根据运营商和指标生成分析因素
+  const factors = []
+  const latest = operatorQuarterlyData.value[operatorQuarterlyData.value.length - 1]
+  
+  // 基于实际数据的分析
+  if (latest) {
+    if (latest.subscriberGrowth < 5) {
+      factors.push({
+        id: 'competition',
+        name: '市场竞争加剧',
+        icon: '⚔️',
+        contribution: 35,
+        impact: 'negative',
+        description: '区域内新进入者增加，价格战激烈'
+      })
     }
     
-    const getLatestMetricValue = (metricId) => {
-      const sortedData = [...props.operatorData].sort((a, b) => b.period.localeCompare(a.period))
-      const latest = sortedData[0]
-      return latest?.data[metricId] || 0
+    if (latest.arpu < 5) {
+      factors.push({
+        id: 'arpu',
+        name: 'ARPU下滑',
+        icon: '📉',
+        contribution: 25,
+        impact: 'negative',
+        description: '低端用户占比提升，套餐ARPU下降'
+      })
     }
     
-    const getMetricRange = (metricId) => {
-      const ranges = {
-        revenue_growth: { min: -10, max: 30 },
-        ebitda_margin: { min: 0, max: 60 },
-        arpu: { min: 0, max: 15 },
-        subscriber_growth: { min: -10, max: 25 },
-        capex_ratio: { min: 0, max: 35 },
-        debt_ratio: { min: 0, max: 80 },
-        fcf: { min: -100, max: 2000 },
-        churn_rate: { min: 0, max: 10 }
-      }
-      return ranges[metricId] || { min: 0, max: 100 }
+    if (latest.ebitdaMargin > 40) {
+      factors.push({
+        id: 'efficiency',
+        name: '运营效率提升',
+        icon: '⚡',
+        contribution: 30,
+        impact: 'positive',
+        description: '网络共享、运维自动化降低成本'
+      })
     }
     
-    const getMetricTrendData = (metricId) => {
-      return [...props.operatorData]
-        .sort((a, b) => a.period.localeCompare(b.period))
-        .map(d => ({
-          period: d.period,
-          value: d.data[metricId] || 0
-        }))
+    if (latest.capexRatio > 20) {
+      factors.push({
+        id: 'capex',
+        name: '资本开支增加',
+        icon: '🏗️',
+        contribution: 20,
+        impact: 'negative',
+        description: '5G网络建设投入加大，短期利润承压'
+      })
     }
     
-    const getImpactLabel = (impact) => {
-      const labels = {
-        high: '高',
-        medium: '中',
-        low: '低'
-      }
-      return labels[impact] || impact
-    }
-    
-    return {
-      getMetricName,
-      getLatestMetricValue,
-      getMetricRange,
-      getMetricTrendData,
-      getImpactLabel
+    if (latest.churnRate > 3) {
+      factors.push({
+        id: 'churn',
+        name: '用户流失',
+        icon: '🚪',
+        contribution: 15,
+        impact: 'negative',
+        description: '竞品促销导致部分用户转网'
+      })
     }
   }
+  
+  // 补充默认因素
+  if (factors.length < 3) {
+    factors.push({
+      id: 'macro',
+      name: '宏观环境影响',
+      icon: '🌍',
+      contribution: 15,
+      impact: 'neutral',
+      description: '汇率波动、通胀影响运营成本'
+    })
+  }
+  
+  return factors.slice(0, 5)
+})
+
+// 风险列表
+const risks = computed(() => {
+  const riskList = []
+  const latest = operatorQuarterlyData.value[operatorQuarterlyData.value.length - 1]
+  
+  if (latest) {
+    if (latest.debtRatio > 70) riskList.push('高负债率可能影响融资能力和财务稳健性')
+    if (latest.churnRate > 4) riskList.push('用户流失率较高，需加强客户维系')
+    if (latest.subscriberGrowth < 0) riskList.push('订户负增长，市场份额可能流失')
+    if (latest.fcf < 0) riskList.push('自由现金流为负，投资能力受限')
+  }
+  
+  if (riskList.length === 0) {
+    riskList.push('暂无明显风险信号')
+  }
+  
+  return riskList
+})
+
+// 机会列表
+const opportunities = computed(() => {
+  const oppList = []
+  const latest = operatorQuarterlyData.value[operatorQuarterlyData.value.length - 1]
+  
+  if (latest) {
+    if (latest.ebitdaMargin > 40) oppList.push('高盈利能力为投资和创新提供资金支持')
+    if (latest.subscriberGrowth > 5) oppList.push('订户快速增长，规模效应显现')
+    if (latest.arpu > 8) oppList.push('ARPU较高，用户价值挖掘空间大')
+    if (latest.fcf > 1) oppList.push('充裕的自由现金流，可加大分红或投资')
+  }
+  
+  if (oppList.length === 0) {
+    oppList.push('关注市场机会，持续改善运营')
+  }
+  
+  return oppList
+})
+
+// 辅助方法
+const getFlag = (country) => {
+  const flags = {
+    'South Africa': '🇿🇦',
+    'Nigeria': '🇳🇬',
+    'Zimbabwe': '🇿🇼'
+  }
+  return flags[country] || '🌍'
+}
+
+const formatNumber = (num) => {
+  if (num >= 100) return (num / 1000).toFixed(1) + '亿'
+  return num + 'M'
+}
+
+const getMetricName = (id) => {
+  const names = {
+    revenue: '营业收入',
+    ebitdaMargin: 'EBITDA利润率',
+    subscriberGrowth: '订户增长率',
+    arpu: 'ARPU',
+    capexRatio: '资本开支比',
+    debtRatio: '负债率',
+    fcf: '自由现金流',
+    churnRate: '流失率'
+  }
+  return names[id] || id
+}
+
+const getMetricUnit = (id) => {
+  const units = {
+    revenue: '亿美元',
+    ebitdaMargin: '%',
+    subscriberGrowth: '%',
+    arpu: '美元',
+    capexRatio: '%',
+    debtRatio: '%',
+    fcf: '亿美元',
+    churnRate: '%'
+  }
+  return units[id] || ''
 }
 </script>
 
@@ -263,373 +443,332 @@ export default {
 .operator-detail {
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 24px;
+}
+
+section {
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 20px;
+}
+
+h2, h3 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: #f1f5f9;
+  margin-bottom: 12px;
+}
+
+/* 运营商选择 */
+.operator-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.operator-tabs button {
+  padding: 10px 16px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 8px;
+  background: rgba(30, 41, 59, 0.5);
+  color: #94a3b8;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.operator-tabs button:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #e2e8f0;
+}
+
+.operator-tabs button.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #3b82f6;
+  color: white;
 }
 
 /* 基本信息 */
 .info-header {
   display: flex;
   justify-content: space-between;
-  align-items: flex-start;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 20px;
-  gap: 20px;
+  align-items: center;
 }
 
-.operator-info {
+.info-main {
   display: flex;
-  gap: 15px;
+  align-items: center;
+  gap: 16px;
 }
 
 .flag {
-  font-size: 48px;
+  font-size: 40px;
 }
 
-.info-text h2 {
+.name-info h2 {
+  margin: 0;
   font-size: 24px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 5px;
 }
 
-.info-text .country {
-  font-size: 13px;
-  color: #888;
-  margin-bottom: 8px;
-}
-
-.info-text .description {
+.country {
+  color: #94a3b8;
   font-size: 14px;
-  color: #aaa;
-  line-height: 1.5;
 }
 
-.latest-report {
+.info-stats {
+  display: flex;
+  gap: 32px;
+}
+
+.stat {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 8px;
-  text-align: right;
 }
 
-.latest-report .label {
+.stat-label {
   font-size: 12px;
-  color: #888;
+  color: #64748b;
 }
 
-.latest-report .period {
+.stat-value {
   font-size: 18px;
   font-weight: 600;
-  color: #00d9ff;
-}
-
-.latest-report .date {
-  font-size: 11px;
-  color: #666;
-}
-
-.report-link {
-  font-size: 12px;
-  color: #00d9ff;
-  text-decoration: none;
-}
-
-.report-link:hover {
-  text-decoration: underline;
-}
-
-/* 子公司 */
-.subsidiaries-section {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  padding: 15px 20px;
-}
-
-.section-title {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 15px;
-}
-
-.section-title .icon {
-  font-size: 18px;
-}
-
-.subsidiaries-list {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.subsidiary-tag {
-  padding: 6px 12px;
-  border-radius: 15px;
-  background: rgba(0, 217, 255, 0.1);
-  color: #00d9ff;
-  font-size: 12px;
+  color: #f1f5f9;
 }
 
 /* 仪表盘 */
-.metrics-dashboard {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  padding: 20px;
-}
-
 .gauges-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 15px;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
 }
 
 .gauge-card {
-  background: rgba(0, 0, 0, 0.2);
+  background: rgba(15, 23, 42, 0.3);
   border-radius: 10px;
-  padding: 15px;
+  padding: 16px;
+  height: 180px;
 }
 
-/* 趋势图 */
-.trends-section {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  padding: 20px;
+/* 趋势 */
+.metric-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
 }
 
-.trend-charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-  gap: 20px;
+.metric-tabs button {
+  padding: 8px 14px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 6px;
+  background: rgba(30, 41, 59, 0.5);
+  color: #94a3b8;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.trend-card {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 15px;
+.metric-tabs button:hover {
+  border-color: rgba(59, 130, 246, 0.3);
+  color: #e2e8f0;
 }
 
-.trend-title {
-  font-size: 13px;
-  color: #888;
-  margin-bottom: 10px;
+.metric-tabs button.active {
+  background: #3b82f6;
+  border-color: #3b82f6;
+  color: white;
+}
+
+.trend-chart-container {
+  height: 250px;
 }
 
 /* 根因分析 */
-.root-cause-section {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.analysis-card {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 10px;
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.analysis-card:last-child {
-  margin-bottom: 0;
-}
-
-.analysis-header {
+.root-cause-content {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 15px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  flex-direction: column;
+  gap: 24px;
 }
 
-.metric-name {
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
+.change-summary {
+  display: flex;
+  justify-content: center;
+}
+
+.change-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px 32px;
+  border-radius: 12px;
+  border: 1px solid;
+}
+
+.change-card.up {
+  background: rgba(34, 197, 94, 0.1);
+  border-color: rgba(34, 197, 94, 0.3);
+}
+
+.change-card.down {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+.change-card.stable {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.change-icon {
+  font-size: 32px;
+}
+
+.change-label {
+  font-size: 14px;
+  color: #94a3b8;
 }
 
 .change-value {
-  font-size: 20px;
-  font-weight: bold;
+  font-size: 24px;
+  font-weight: 700;
+  color: #f1f5f9;
 }
 
-.change-value.positive {
-  color: #00c896;
+.change-percent {
+  font-size: 14px;
+  color: #94a3b8;
 }
 
-.change-value.negative {
-  color: #ff6464;
-}
-
-.analysis-content {
+/* 因素列表 */
+.factors-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 12px;
 }
 
-.causes-section {
-  flex: 1;
+.factor-item {
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.3);
+  border-radius: 8px;
+  border-left: 3px solid;
 }
 
-.causes-title {
+.factor-item.positive {
+  border-left-color: #10b981;
+}
+
+.factor-item.negative {
+  border-left-color: #ef4444;
+}
+
+.factor-item.neutral {
+  border-left-color: #3b82f6;
+}
+
+.factor-header {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 13px;
-  color: #888;
-  margin-bottom: 12px;
-}
-
-.causes-title .icon {
-  font-size: 16px;
-}
-
-.causes-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.cause-item {
-  padding: 12px;
-  border-radius: 8px;
-}
-
-.cause-item.primary {
-  background: rgba(0, 217, 255, 0.08);
-  border-left: 3px solid #00d9ff;
-}
-
-.cause-item.secondary {
-  background: rgba(255, 255, 255, 0.03);
-  border-left: 3px solid #555;
-}
-
-.cause-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   margin-bottom: 8px;
 }
 
-.cause-name {
+.factor-icon {
+  font-size: 16px;
+}
+
+.factor-name {
+  flex: 1;
+  font-size: 14px;
   font-weight: 500;
-  color: #fff;
+  color: #f1f5f9;
 }
 
-.impact-badge {
-  padding: 3px 10px;
-  border-radius: 10px;
-  font-size: 11px;
-  font-weight: 500;
-}
-
-.impact-badge.high {
-  background: rgba(255, 100, 100, 0.2);
-  color: #ff6464;
-}
-
-.impact-badge.medium {
-  background: rgba(255, 200, 100, 0.2);
-  color: #ffc864;
-}
-
-.cause-contribution {
+.factor-contribution {
   font-size: 13px;
-  color: #aaa;
-  margin-bottom: 6px;
+  font-weight: 600;
+  color: #60a5fa;
 }
 
-.cause-contribution strong {
-  color: #00d9ff;
+.factor-bar {
+  height: 4px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 2px;
+  margin-bottom: 8px;
 }
 
-.cause-evidence {
+.bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #3b82f6, #60a5fa);
+  border-radius: 2px;
+}
+
+.factor-desc {
   font-size: 12px;
-  color: #888;
-  line-height: 1.5;
-}
-
-.evidence-icon {
-  margin-right: 5px;
+  color: #94a3b8;
 }
 
 /* 风险与机会 */
-.risk-opportunity-section {
+.risk-opportunity {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
-  margin-top: 10px;
 }
 
 .risks, .opportunities {
-  padding: 15px;
+  padding: 16px;
+  background: rgba(15, 23, 42, 0.3);
   border-radius: 8px;
 }
 
-.risks {
-  background: rgba(255, 100, 100, 0.05);
+.risks ul, .opportunities ul {
+  list-style: none;
+  padding: 0;
 }
 
-.opportunities {
-  background: rgba(0, 200, 150, 0.05);
+.risks li, .opportunities li {
+  padding: 8px 0;
+  font-size: 13px;
+  color: #cbd5e1;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
 }
 
-.risk-title, .opportunity-title {
+.risks li:last-child, .opportunities li:last-child {
+  border-bottom: none;
+}
+
+/* 无选择 */
+.no-selection {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 13px;
-  margin-bottom: 10px;
+  justify-content: center;
+  min-height: 300px;
 }
 
-.risk-title {
-  color: #ff6464;
+.placeholder {
+  text-align: center;
+  color: #64748b;
 }
 
-.opportunity-title {
-  color: #00c896;
+.placeholder .icon {
+  font-size: 48px;
+  display: block;
+  margin-bottom: 16px;
 }
 
-.risk-list, .opportunity-list {
-  padding-left: 20px;
-  font-size: 12px;
-  line-height: 1.8;
-}
-
-.risk-list li {
-  color: #aaa;
-}
-
-.opportunity-list li {
-  color: #aaa;
-}
-
-@media (max-width: 1024px) {
-  .info-header {
-    flex-direction: column;
-  }
-  
-  .latest-report {
-    align-items: flex-start;
-    text-align: left;
-  }
-  
-  .trend-charts-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .risk-opportunity-section {
-    grid-template-columns: 1fr;
-  }
-}
-
-@media (max-width: 768px) {
-  .gauges-grid {
-    grid-template-columns: 1fr 1fr;
-  }
+.placeholder p {
+  font-size: 16px;
 }
 </style>

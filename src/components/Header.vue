@@ -1,185 +1,209 @@
 <template>
-  <header class="header">
+  <header class="dashboard-header">
     <div class="header-left">
       <div class="logo">
-        <span class="logo-icon">🌍</span>
+        <span class="logo-icon">📊</span>
         <div class="logo-text">
-          <h1>南部非洲运营商财报洞察看板</h1>
-          <p class="subtitle">Southern Africa Telecom Business Insight Dashboard</p>
+          <h1>南部非洲运营商洞察看板</h1>
+          <span class="subtitle">Southern Africa Telecom Insights</span>
+        </div>
+      </div>
+    </div>
+    
+    <div class="header-center">
+      <div class="stats-quick">
+        <div class="stat-item">
+          <span class="stat-value">6</span>
+          <span class="stat-label">运营商</span>
+        </div>
+        <div class="divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">8</span>
+          <span class="stat-label">核心指标</span>
+        </div>
+        <div class="divider"></div>
+        <div class="stat-item">
+          <span class="stat-value">4</span>
+          <span class="stat-label">季度数据</span>
         </div>
       </div>
     </div>
     
     <div class="header-right">
       <div class="update-info">
-        <span class="label">数据版本：</span>
-        <span class="value">{{ version }}</span>
-        <span class="separator">|</span>
-        <span class="label">更新时间：</span>
-        <span class="value">{{ lastUpdate }}</span>
+        <span class="update-label">数据更新</span>
+        <span class="update-time">{{ lastUpdate }}</span>
       </div>
       
-      <button class="refresh-btn" @click="$emit('refresh')">
-        <span class="icon">🔄</span>
-        <span>AI 刷新</span>
-      </button>
-      
-      <div class="actions">
-        <button class="action-btn" title="复制链接">📋</button>
-        <button class="action-btn" title="深色模式">🌙</button>
-        <button class="action-btn" title="设置">⚙</button>
+      <div class="source-info">
+        <span class="source-label">数据来源</span>
+        <a :href="dataSource" target="_blank" class="source-link">
+          官方财报
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+            <polyline points="15 3 21 3 21 9"></polyline>
+            <line x1="10" y1="14" x2="21" y2="3"></line>
+          </svg>
+        </a>
       </div>
     </div>
   </header>
 </template>
 
-<script>
-export default {
-  name: 'Header',
-  props: {
-    lastUpdate: String,
-    version: String
+<script setup>
+defineProps({
+  lastUpdate: {
+    type: String,
+    default: '2026-09-03'
   },
-  emits: ['refresh']
-}
+  dataSource: {
+    type: String,
+    default: '#'
+  }
+})
 </script>
 
 <style scoped>
-.header {
+.dashboard-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 15px 25px;
-  background: rgba(0, 0, 0, 0.4);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  justify-content: space-between;
+  padding: 16px 24px;
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+  border-bottom: 1px solid rgba(148, 163, 184, 0.1);
   backdrop-filter: blur(10px);
 }
 
 .header-left {
-  display: flex;
-  align-items: center;
+  flex: 1;
 }
 
 .logo {
   display: flex;
   align-items: center;
-  gap: 15px;
+  gap: 12px;
 }
 
 .logo-icon {
-  font-size: 36px;
+  font-size: 32px;
 }
 
 .logo-text h1 {
-  font-size: 20px;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 2px;
+  font-size: 18px;
+  font-weight: 700;
+  color: #f1f5f9;
+  margin: 0;
+  letter-spacing: -0.02em;
 }
 
-.logo-text .subtitle {
+.subtitle {
   font-size: 11px;
-  color: #888;
-  text-transform: uppercase;
-  letter-spacing: 1px;
+  color: #64748b;
+  letter-spacing: 0.02em;
+}
+
+.header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.stats-quick {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 8px 20px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.stat-value {
+  font-size: 18px;
+  font-weight: 700;
+  color: #60a5fa;
+}
+
+.stat-label {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.divider {
+  width: 1px;
+  height: 24px;
+  background: rgba(148, 163, 184, 0.2);
 }
 
 .header-right {
+  flex: 1;
   display: flex;
+  justify-content: flex-end;
   align-items: center;
-  gap: 20px;
+  gap: 24px;
 }
 
-.update-info {
+.update-info, .source-info {
   display: flex;
-  align-items: center;
-  gap: 5px;
-  font-size: 13px;
-  padding: 8px 15px;
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
 }
 
-.update-info .label {
-  color: #888;
+.update-label, .source-label {
+  font-size: 10px;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
-.update-info .value {
-  color: #00d9ff;
-  font-weight: 500;
-}
-
-.update-info .separator {
-  color: #555;
-  margin: 0 5px;
-}
-
-.refresh-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  border: none;
-  border-radius: 20px;
-  background: linear-gradient(135deg, #00d9ff 0%, #00b4d8 100%);
-  color: #1a1a2e;
+.update-time {
   font-size: 13px;
   font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
+  color: #f1f5f9;
 }
 
-.refresh-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 15px rgba(0, 217, 255, 0.4);
-}
-
-.refresh-btn .icon {
-  font-size: 16px;
-}
-
-.actions {
+.source-link {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: #60a5fa;
+  text-decoration: none;
+  transition: color 0.2s ease;
 }
 
-.action-btn {
-  width: 36px;
-  height: 36px;
-  border: none;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  color: #e0e0e0;
-  cursor: pointer;
-  font-size: 16px;
-  transition: all 0.3s ease;
+.source-link:hover {
+  color: #93c5fd;
 }
 
-.action-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.1);
+.source-link svg {
+  width: 12px;
+  height: 12px;
 }
 
 @media (max-width: 1024px) {
-  .header {
+  .dashboard-header {
     flex-direction: column;
-    gap: 15px;
+    gap: 16px;
+  }
+  
+  .header-left, .header-center, .header-right {
+    flex: none;
+    width: 100%;
+    justify-content: center;
   }
   
   .header-right {
-    flex-wrap: wrap;
     justify-content: center;
-  }
-}
-
-@media (max-width: 768px) {
-  .logo-text h1 {
-    font-size: 16px;
-  }
-  
-  .update-info {
-    font-size: 11px;
-    padding: 6px 10px;
+    gap: 32px;
   }
 }
 </style>
