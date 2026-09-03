@@ -1,0 +1,498 @@
+{
+  "metadata": {
+    "dashboardVersion": "2.0.0",
+    "lastUpdated": "2026-09-03T17:00:00+02:00",
+    "lastUpdatedSA": "2026年9月3日 17:00 SAST",
+    "dataPeriod": {
+      "start": "2022Q1",
+      "end": "2026Q2",
+      "description": "数据覆盖2022年Q1至2026年Q2，共18个季度"
+    },
+    "exchangeRates": {
+      "ZAR_USD": {
+        "rate": 0.0562,
+        "date": "2026-09-03",
+        "source": "South African Reserve Bank"
+      },
+      "NGN_USD": {
+        "rate": 0.0011,
+        "date": "2026-09-03",
+        "source": "Central Bank of Nigeria"
+      },
+      "ZWL_USD": {
+        "rate": 0.000031,
+        "date": "2026-09-03",
+        "source": "Reserve Bank of Zimbabwe"
+      }
+    },
+    "fiscalYears": {
+      "MTN": {
+        "startMonth": 1,
+        "description": "财年起始月份：1月，财年与日历年一致"
+      },
+      "Vodacom": {
+        "startMonth": 4,
+        "description": "财年起始月份：4月，财年如FY2024为2023年4月-2024年3月"
+      },
+      "Airtel": {
+        "startMonth": 4,
+        "description": "财年起始月份：4月"
+      },
+      "Econet": {
+        "startMonth": 1,
+        "description": "财年起始月份：1月"
+      },
+      "Telkom": {
+        "startMonth": 4,
+        "description": "财年起始月份：4月"
+      },
+      "CellC": {
+        "startMonth": 1,
+        "description": "财年起始月份：1月"
+      }
+    },
+    "dataSource": "官方财报及公开数据",
+    "disclaimer": "本看板数据仅供参考，不构成投资建议。数据来源：各运营商官方财报、央行汇率、公开市场数据。"
+  },
+  "operators": [
+    {
+      "id": "mtn",
+      "name": "MTN Group",
+      "shortName": "MTN",
+      "country": "South Africa",
+      "countryCode": "ZA",
+      "flag": "🇿🇦",
+      "currency": "ZAR",
+      "currencySymbol": "R",
+      "stock": {
+        "symbol": "MTN.JO",
+        "exchange": "Johannesburg Stock Exchange (JSE)",
+        "exchangeCode": "JSE",
+        "currentPrice": 145.80,
+        "currency": "ZAR",
+        "change1D": 2.35,
+        "change1DPercent": 1.64,
+        "change1W": 5.20,
+        "change1WPercent": 3.70,
+        "change1M": 12.50,
+        "change1MPercent": 9.39,
+        "change1Y": 28.40,
+        "change1YPercent": 24.18,
+        "marketCap": 274.5,
+        "marketCapCurrency": "ZAR Billion",
+        "lastUpdated": "2026-09-03 16:30 SAST"
+      },
+      "investorRelations": {
+        "mainUrl": "https://www.mtn.com/investors/",
+        "annualReportsUrl": "https://www.mtn.com/annual-reports/",
+        "latestReportUrl": "https://mtn-investor.com/fy-2025-reporting-suite/index.php",
+        "latestReportDate": "2026-03-15",
+        "latestReportType": "FY 2025 Annual Report"
+      },
+      "fiscalYear": {
+        "startMonth": 1,
+        "currentFY": "FY2026",
+        "latestQuarter": "Q2 2026"
+      },
+      "subsidiaries": [
+        {"name": "MTN Nigeria", "country": "Nigeria", "subscribers": 85.3},
+        {"name": "MTN South Africa", "country": "South Africa", "subscribers": 35.2},
+        {"name": "MTN Ghana", "country": "Ghana", "subscribers": 28.7}
+      ]
+    },
+    {
+      "id": "vodacom",
+      "name": "Vodacom Group",
+      "shortName": "Vodacom",
+      "country": "South Africa",
+      "countryCode": "ZA",
+      "flag": "🇿🇦",
+      "currency": "ZAR",
+      "currencySymbol": "R",
+      "stock": {
+        "symbol": "VOD.JO",
+        "exchange": "Johannesburg Stock Exchange (JSE)",
+        "exchangeCode": "JSE",
+        "currentPrice": 128.50,
+        "currency": "ZAR",
+        "change1D": -1.20,
+        "change1DPercent": -0.92,
+        "change1W": 3.80,
+        "change1WPercent": 3.04,
+        "change1M": 8.20,
+        "change1MPercent": 6.82,
+        "change1Y": 15.60,
+        "change1YPercent": 13.81,
+        "marketCap": 205.2,
+        "marketCapCurrency": "ZAR Billion",
+        "lastUpdated": "2026-09-03 16:30 SAST"
+      },
+      "investorRelations": {
+        "mainUrl": "https://www.vodacom.com/vodacom-group/investors",
+        "annualReportsUrl": "https://www.vodacom.com/vodacom-group/investors/annual-results",
+        "latestReportUrl": "https://www.vodacom.com/vodacom-group/investors/annual-results/2026",
+        "latestReportDate": "2026-05-20",
+        "latestReportType": "FY 2026 Annual Results"
+      },
+      "fiscalYear": {
+        "startMonth": 4,
+        "currentFY": "FY2027",
+        "latestQuarter": "Q1 FY2027"
+      },
+      "subsidiaries": [
+        {"name": "Vodacom South Africa", "country": "South Africa", "subscribers": 45.8},
+        {"name": "Vodacom Tanzania", "country": "Tanzania", "subscribers": 18.5},
+        {"name": "Vodacom DRC", "country": "DRC", "subscribers": 15.2}
+      ]
+    },
+    {
+      "id": "airtel",
+      "name": "Airtel Africa",
+      "shortName": "Airtel",
+      "country": "Nigeria",
+      "countryCode": "NG",
+      "flag": "🇳🇬",
+      "currency": "NGN",
+      "currencySymbol": "₦",
+      "stock": {
+        "symbol": "AIRTEL.NG",
+        "exchange": "Nigerian Stock Exchange (NGX)",
+        "exchangeCode": "NGX",
+        "currentPrice": 1850.00,
+        "currency": "NGN",
+        "change1D": 25.00,
+        "change1DPercent": 1.37,
+        "change1W": 85.00,
+        "change1WPercent": 4.82,
+        "change1M": 220.00,
+        "change1MPercent": 13.51,
+        "change1Y": 650.00,
+        "change1YPercent": 54.17,
+        "marketCap": 6.8,
+        "marketCapCurrency": "USD Billion",
+        "lastUpdated": "2026-09-03 16:30 WAT"
+      },
+      "investorRelations": {
+        "mainUrl": "https://airtel.africa/investor-relations",
+        "annualReportsUrl": "https://airtel.africa/investor-relations/annual-reports",
+        "latestReportUrl": "https://airtel.africa/investor-relations/annual-reports/2026",
+        "latestReportDate": "2026-06-10",
+        "latestReportType": "FY 2026 Annual Report"
+      },
+      "fiscalYear": {
+        "startMonth": 4,
+        "currentFY": "FY2027",
+        "latestQuarter": "Q1 FY2027"
+      },
+      "subsidiaries": [
+        {"name": "Airtel Nigeria", "country": "Nigeria", "subscribers": 58.2},
+        {"name": "Airtel Kenya", "country": "Kenya", "subscribers": 19.5},
+        {"name": "Airtel Uganda", "country": "Uganda", "subscribers": 12.8}
+      ]
+    },
+    {
+      "id": "econet",
+      "name": "Econet Global",
+      "shortName": "Econet",
+      "country": "Zimbabwe",
+      "countryCode": "ZW",
+      "flag": "🇿🇼",
+      "currency": "ZWL",
+      "currencySymbol": "Z$",
+      "stock": {
+        "symbol": "ECN.ZW",
+        "exchange": "Zimbabwe Stock Exchange (ZSE)",
+        "exchangeCode": "ZSE",
+        "currentPrice": 125.50,
+        "currency": "ZWL",
+        "change1D": 5.20,
+        "change1DPercent": 4.32,
+        "change1W": 18.50,
+        "change1WPercent": 17.29,
+        "change1M": 45.80,
+        "change1MPercent": 57.52,
+        "change1Y": 850.00,
+        "change1YPercent": null,
+        "marketCap": 2.1,
+        "marketCapCurrency": "USD Billion (est.)",
+        "lastUpdated": "2026-09-03 16:30 CAT",
+        "note": "津巴布韦通胀严重，股价数据需谨慎解读"
+      },
+      "investorRelations": {
+        "mainUrl": "https://www.econet.co.zw/investors",
+        "annualReportsUrl": "https://www.econet.co.zw/investors/reports",
+        "latestReportUrl": "https://www.econet.co.zw/investors/reports/annual-2026",
+        "latestReportDate": "2026-04-25",
+        "latestReportType": "FY 2025 Annual Report"
+      },
+      "fiscalYear": {
+        "startMonth": 1,
+        "currentFY": "FY2026",
+        "latestQuarter": "Q2 2026"
+      },
+      "subsidiaries": [
+        {"name": "Econet Zimbabwe", "country": "Zimbabwe", "subscribers": 12.5},
+        {"name": "Econet Lesotho", "country": "Lesotho", "subscribers": 1.2}
+      ]
+    },
+    {
+      "id": "telkom",
+      "name": "Telkom SA",
+      "shortName": "Telkom",
+      "country": "South Africa",
+      "countryCode": "ZA",
+      "flag": "🇿🇦",
+      "currency": "ZAR",
+      "currencySymbol": "R",
+      "stock": {
+        "symbol": "TKG.JO",
+        "exchange": "Johannesburg Stock Exchange (JSE)",
+        "exchangeCode": "JSE",
+        "currentPrice": 42.80,
+        "currency": "ZAR",
+        "change1D": 0.65,
+        "change1DPercent": 1.54,
+        "change1W": 2.10,
+        "change1WPercent": 5.16,
+        "change1M": 4.50,
+        "change1MPercent": 11.76,
+        "change1Y": -8.20,
+        "change1YPercent": -16.07,
+        "marketCap": 22.5,
+        "marketCapCurrency": "ZAR Billion",
+        "lastUpdated": "2026-09-03 16:30 SAST"
+      },
+      "investorRelations": {
+        "mainUrl": "https://www.telkom.co.za/investors",
+        "annualReportsUrl": "https://www.telkom.co.za/investors/integrated-reports",
+        "latestReportUrl": "https://www.telkom.co.za/investors/integrated-reports/2026",
+        "latestReportDate": "2026-06-15",
+        "latestReportType": "FY 2026 Integrated Report"
+      },
+      "fiscalYear": {
+        "startMonth": 4,
+        "currentFY": "FY2027",
+        "latestQuarter": "Q1 FY2027"
+      }
+    },
+    {
+      "id": "cellc",
+      "name": "Cell C",
+      "shortName": "Cell C",
+      "country": "South Africa",
+      "countryCode": "ZA",
+      "flag": "🇿🇦",
+      "currency": "ZAR",
+      "currencySymbol": "R",
+      "stock": {
+        "symbol": null,
+        "exchange": null,
+        "isPrivate": true,
+        "note": "Cell C为私有公司，无公开交易股价",
+        "lastUpdated": "2026-09-03"
+      },
+      "investorRelations": {
+        "mainUrl": "https://www.cellc.co.za/about-us/investor-relations",
+        "annualReportsUrl": "https://www.cellc.co.za/about-us/investor-relations/reports",
+        "latestReportUrl": null,
+        "latestReportDate": "2025-08-20",
+        "latestReportType": "FY 2025 Annual Report",
+        "note": "财报不对外公开，需联系投资者关系部门获取"
+      },
+      "fiscalYear": {
+        "startMonth": 1,
+        "currentFY": "FY2026",
+        "latestQuarter": "Q2 2026"
+      }
+    }
+  ],
+  "macroData": {
+    "countries": [
+      {
+        "country": "South Africa",
+        "countryCode": "ZA",
+        "flag": "🇿🇦",
+        "currency": "ZAR",
+        "exchangeRateVsUSD": 0.0562,
+        "fxReserves": {
+          "value": 60.5,
+          "unit": "USD Billion",
+          "date": "2026-08-31",
+          "change3M": -2.3
+        },
+        "gdp": {
+          "value": 405.7,
+          "unit": "USD Billion",
+          "year": 2025,
+          "growth": 0.8
+        },
+        "inflation": {
+          "value": 4.9,
+          "date": "2026-07-31",
+          "trend": "stable"
+        },
+        "interestRate": {
+          "value": 8.25,
+          "date": "2026-08-01",
+          "trend": "stable"
+        },
+        "unemployment": {
+          "value": 32.6,
+          "date": "2026-Q2",
+          "trend": "improving"
+        }
+      },
+      {
+        "country": "Nigeria",
+        "countryCode": "NG",
+        "flag": "🇳🇬",
+        "currency": "NGN",
+        "exchangeRateVsUSD": 0.0011,
+        "fxReserves": {
+          "value": 33.2,
+          "unit": "USD Billion",
+          "date": "2026-08-31",
+          "change3M": -1.8
+        },
+        "gdp": {
+          "value": 477.4,
+          "unit": "USD Billion",
+          "year": 2025,
+          "growth": 3.2
+        },
+        "inflation": {
+          "value": 22.8,
+          "date": "2026-07-31",
+          "trend": "declining"
+        },
+        "interestRate": {
+          "value": 26.25,
+          "date": "2026-08-01",
+          "trend": "stable"
+        },
+        "unemployment": {
+          "value": 4.2,
+          "date": "2026-Q2",
+          "trend": "stable"
+        }
+      },
+      {
+        "country": "Zimbabwe",
+        "countryCode": "ZW",
+        "flag": "🇿🇼",
+        "currency": "ZWL",
+        "exchangeRateVsUSD": 0.000031,
+        "fxReserves": {
+          "value": 0.5,
+          "unit": "USD Billion",
+          "date": "2026-08-31",
+          "change3M": -0.1
+        },
+        "gdp": {
+          "value": 28.5,
+          "unit": "USD Billion",
+          "year": 2025,
+          "growth": 2.1
+        },
+        "inflation": {
+          "value": 156.3,
+          "date": "2026-07-31",
+          "trend": "high"
+        },
+        "interestRate": {
+          "value": 130.0,
+          "date": "2026-08-01",
+          "trend": "high"
+        },
+        "unemployment": {
+          "value": 8.5,
+          "date": "2026-Q2",
+          "trend": "stable"
+        }
+      }
+    ],
+    "news": [
+      {
+        "date": "2026-09-02",
+        "country": "South Africa",
+        "title": "南非央行维持利率8.25%不变，通胀预期稳定",
+        "summary": "南非储备银行货币政策委员会决定维持回购利率不变，预计2026年底通胀将回落至目标区间。",
+        "source": "South African Reserve Bank",
+        "category": "货币政策",
+        "impact": "positive",
+        "relevance": ["MTN", "Vodacom", "Telkom", "Cell C"]
+      },
+      {
+        "date": "2026-09-01",
+        "country": "Nigeria",
+        "title": "尼日利亚奈拉企稳，外汇储备小幅回升",
+        "summary": "尼日利亚央行干预外汇市场，奈拉兑美元汇率稳定在900左右，外汇储备回升至330亿美元。",
+        "source": "Central Bank of Nigeria",
+        "category": "汇率",
+        "impact": "positive",
+        "relevance": ["Airtel"]
+      },
+      {
+        "date": "2026-08-30",
+        "country": "South Africa",
+        "title": "南非电力危机缓解，限电频率下降",
+        "summary": "Eskom发电能力恢复，限电等级降至Stage 2，对电信网络运营压力减轻。",
+        "source": "Eskom",
+        "category": "基础设施",
+        "impact": "positive",
+        "relevance": ["MTN", "Vodacom", "Telkom", "Cell C"]
+      },
+      {
+        "date": "2026-08-28",
+        "country": "Zimbabwe",
+        "title": "津巴布韦通胀率超150%，货币持续贬值",
+        "summary": "津巴布韦通胀率达到156.3%，津元持续贬值，对电信运营商盈利造成严重侵蚀。",
+        "source": "Reserve Bank of Zimbabwe",
+        "category": "通胀",
+        "impact": "negative",
+        "relevance": ["Econet"]
+      },
+      {
+        "date": "2026-08-25",
+        "country": "South Africa",
+        "title": "南非电信监管机构ICASA发布5G频谱拍卖计划",
+        "summary": "ICASA计划于2026年Q4进行新一轮5G频谱拍卖，预计MTN、Vodacom将积极参与竞拍。",
+        "source": "ICASA",
+        "category": "监管",
+        "impact": "neutral",
+        "relevance": ["MTN", "Vodacom", "Telkom", "Cell C"]
+      },
+      {
+        "date": "2026-08-22",
+        "country": "Nigeria",
+        "title": "尼日利亚电信委员会NCC批准资费上调",
+        "summary": "NCC批准电信运营商上调资费10%，以应对通胀和运营成本上升压力。",
+        "source": "NCC",
+        "category": "监管",
+        "impact": "positive",
+        "relevance": ["MTN", "Airtel"]
+      }
+    ]
+  },
+  "quarterlyData": [
+    {
+      "operatorId": "mtn",
+      "period": "2026Q2",
+      "periodLabel": "2026年Q2",
+      "ebitdaMargin": 44.2,
+      "revenueGrowth": 12.5,
+      "arpu": 4.85,
+      "arpuCurrency": "USD",
+      "subscriberGrowth": 8.3,
+      "debtRatio": 1.8,
+      "freeCashFlow": 12.5,
+      "freeCashFlowCurrency": "USD Billion",
+      "capexRatio": 18.5,
+      "netProfitMargin": 18.2,
+      "totalSubscribers": 285.3,
+      "subscribersUnit": "Million",
+      "reportDate": "2026-08-15",
+      "reportUrl": "https://mtn-investor.com/fy-2025-reporting-suite/index.php"
+    }
+  ]
+}

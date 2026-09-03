@@ -1,81 +1,79 @@
 <template>
-  <header class="dashboard-header">
-    <div class="header-left">
-      <div class="logo">
-        <span class="logo-icon">📊</span>
-        <div class="logo-text">
-          <h1>南部非洲运营商洞察看板</h1>
-          <span class="subtitle">Southern Africa Telecom Insights</span>
+  <header class="header">
+    <div class="header-content">
+      <div class="logo-section">
+        <div class="logo">
+          <span class="logo-icon">📊</span>
+          <div class="logo-text">
+            <h1>南部非洲电信运营商洞察看板</h1>
+            <p class="subtitle">Southern Africa Telecom Operators Insight Dashboard</p>
+          </div>
         </div>
-      </div>
-    </div>
-    
-    <div class="header-center">
-      <div class="stats-quick">
-        <div class="stat-item">
-          <span class="stat-value">6</span>
-          <span class="stat-label">运营商</span>
-        </div>
-        <div class="divider"></div>
-        <div class="stat-item">
-          <span class="stat-value">8</span>
-          <span class="stat-label">核心指标</span>
-        </div>
-        <div class="divider"></div>
-        <div class="stat-item">
-          <span class="stat-value">4</span>
-          <span class="stat-label">季度数据</span>
-        </div>
-      </div>
-    </div>
-    
-    <div class="header-right">
-      <div class="update-info">
-        <span class="update-label">数据更新</span>
-        <span class="update-time">{{ lastUpdate }}</span>
       </div>
       
-      <div class="source-info">
-        <span class="source-label">数据来源</span>
-        <a :href="dataSource" target="_blank" class="source-link">
-          官方财报
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
-            <polyline points="15 3 21 3 21 9"></polyline>
-            <line x1="10" y1="14" x2="21" y2="3"></line>
-          </svg>
-        </a>
+      <div class="header-info">
+        <div class="info-item">
+          <span class="label">更新时间</span>
+          <span class="value">{{ lastUpdate }}</span>
+        </div>
+        
+        <div class="info-item">
+          <span class="label">数据来源</span>
+          <span class="value">{{ dataSource }}</span>
+        </div>
+        
+        <button class="refresh-btn" @click="$emit('refresh')" :disabled="refreshing">
+          <span class="refresh-icon">🔄</span>
+          <span class="refresh-text">AI 刷新</span>
+        </button>
       </div>
     </div>
   </header>
 </template>
 
-<script setup>
-defineProps({
-  lastUpdate: {
-    type: String,
-    default: '2026-09-03'
+<script>
+export default {
+  name: 'Header',
+  props: {
+    lastUpdate: {
+      type: String,
+      default: '未更新'
+    },
+    dataSource: {
+      type: String,
+      default: '官方财报'
+    },
+    refreshing: {
+      type: Boolean,
+      default: false
+    }
   },
-  dataSource: {
-    type: String,
-    default: '#'
-  }
-})
+  emits: ['refresh']
+}
 </script>
 
 <style scoped>
-.dashboard-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
-  background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(30, 41, 59, 0.95) 100%);
+.header {
+  background: linear-gradient(135deg, rgba(30, 41, 59, 0.95) 0%, rgba(15, 23, 42, 0.95) 100%);
   border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 16px 24px;
   backdrop-filter: blur(10px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
-.header-left {
-  flex: 1;
+.header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1800px;
+  margin: 0 auto;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
 }
 
 .logo {
@@ -89,7 +87,7 @@ defineProps({
 }
 
 .logo-text h1 {
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 700;
   color: #f1f5f9;
   margin: 0;
@@ -97,113 +95,89 @@ defineProps({
 }
 
 .subtitle {
-  font-size: 11px;
+  font-size: 12px;
   color: #64748b;
-  letter-spacing: 0.02em;
+  margin: 2px 0 0 0;
 }
 
-.header-center {
-  flex: 1;
+.header-info {
   display: flex;
-  justify-content: center;
-}
-
-.stats-quick {
-  display: flex;
-  align-items: center;
-  gap: 16px;
-  padding: 8px 20px;
-  background: rgba(30, 41, 59, 0.5);
-  border-radius: 8px;
-  border: 1px solid rgba(148, 163, 184, 0.1);
-}
-
-.stat-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 2px;
-}
-
-.stat-value {
-  font-size: 18px;
-  font-weight: 700;
-  color: #60a5fa;
-}
-
-.stat-label {
-  font-size: 10px;
-  color: #64748b;
-}
-
-.divider {
-  width: 1px;
-  height: 24px;
-  background: rgba(148, 163, 184, 0.2);
-}
-
-.header-right {
-  flex: 1;
-  display: flex;
-  justify-content: flex-end;
   align-items: center;
   gap: 24px;
 }
 
-.update-info, .source-info {
+.info-item {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 2px;
 }
 
-.update-label, .source-label {
-  font-size: 10px;
+.info-item .label {
+  font-size: 11px;
   color: #64748b;
   text-transform: uppercase;
   letter-spacing: 0.05em;
 }
 
-.update-time {
-  font-size: 13px;
-  font-weight: 500;
-  color: #f1f5f9;
+.info-item .value {
+  font-size: 14px;
+  color: #e2e8f0;
+  font-weight: 600;
 }
 
-.source-link {
+.refresh-btn {
   display: flex;
   align-items: center;
-  gap: 4px;
-  font-size: 13px;
-  color: #60a5fa;
-  text-decoration: none;
-  transition: color 0.2s ease;
+  gap: 8px;
+  padding: 10px 20px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
-.source-link:hover {
-  color: #93c5fd;
+.refresh-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
 }
 
-.source-link svg {
-  width: 12px;
-  height: 12px;
+.refresh-btn:active {
+  transform: translateY(0);
 }
 
-@media (max-width: 1024px) {
-  .dashboard-header {
+.refresh-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.refresh-icon {
+  font-size: 16px;
+}
+
+.refresh-text {
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .header-content {
     flex-direction: column;
+    align-items: flex-start;
     gap: 16px;
   }
   
-  .header-left, .header-center, .header-right {
-    flex: none;
+  .header-info {
     width: 100%;
-    justify-content: center;
+    justify-content: space-between;
   }
   
-  .header-right {
-    justify-content: center;
-    gap: 32px;
+  .logo-text h1 {
+    font-size: 16px;
   }
 }
 </style>
