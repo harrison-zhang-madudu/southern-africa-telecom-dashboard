@@ -1,0 +1,817 @@
+{
+  "version": "v1.0",
+  "lastUpdate": "2026-09-03",
+  "updateTime": "2026-09-03 09:14:00",
+  "dataSource": "各运营商官方财报",
+  
+  "operators": [
+    {
+      "id": "mtn",
+      "name": "MTN Group",
+      "country": "南非",
+      "region": "Southern Africa",
+      "logo": "🇿🇦",
+      "description": "非洲最大移动运营商，业务覆盖21个国家",
+      "subsidiaries": ["MTN South Africa", "MTN Nigeria", "MTN Ghana", "MTN Uganda"],
+      "latestReport": {
+        "period": "2026 Q2",
+        "publishDate": "2026-08-15",
+        "reportUrl": "https://www.mtn.com/investors/results/"
+      }
+    },
+    {
+      "id": "vodacom",
+      "name": "Vodacom Group",
+      "country": "南非",
+      "region": "Southern Africa",
+      "logo": "🇿🇦",
+      "description": "Vodafone旗下非洲子公司，覆盖南非、坦桑尼亚、莫桑比克等",
+      "subsidiaries": ["Vodacom SA", "Vodacom Tanzania", "Vodacom Mozambique", "Safaricom"],
+      "latestReport": {
+        "period": "2026 Q2",
+        "publishDate": "2026-08-20",
+        "reportUrl": "https://www.vodacom.com/investors/"
+      }
+    },
+    {
+      "id": "airtel",
+      "name": "Airtel Africa",
+      "country": "尼日利亚",
+      "region": "West Africa",
+      "logo": "🇳🇬",
+      "description": "Bharti Airtel非洲业务，覆盖14个非洲国家",
+      "subsidiaries": ["Airtel Nigeria", "Airtel Kenya", "Airtel Tanzania", "Airtel Uganda"],
+      "latestReport": {
+        "period": "2026 Q2",
+        "publishDate": "2026-08-10",
+        "reportUrl": "https://airtel.africa/investors/"
+      }
+    },
+    {
+      "id": "econet",
+      "name": "Econet Global",
+      "country": "津巴布韦",
+      "region": "Southern Africa",
+      "logo": "🇿🇼",
+      "description": "津巴布韦最大电信集团，业务扩展至莱索托、博茨瓦纳",
+      "subsidiaries": ["Econet Zimbabwe", "Econet Lesotho", "Econet Botswana"],
+      "latestReport": {
+        "period": "2026 H1",
+        "publishDate": "2026-07-28",
+        "reportUrl": "https://www.econet.co.zw/investors/"
+      }
+    },
+    {
+      "id": "telkom",
+      "name": "Telkom SA",
+      "country": "南非",
+      "region": "Southern Africa",
+      "logo": "🇿🇦",
+      "description": "南非国有固网运营商，转型移动业务",
+      "subsidiaries": ["Telkom Mobile", "BCX"],
+      "latestReport": {
+        "period": "2026 Q2",
+        "publishDate": "2026-08-25",
+        "reportUrl": "https://www.telkom.co.za/investors/"
+      }
+    },
+    {
+      "id": "cellc",
+      "name": "Cell C",
+      "country": "南非",
+      "region": "Southern Africa",
+      "logo": "🇿🇦",
+      "description": "南非第三大移动运营商，重组后聚焦数据业务",
+      "subsidiaries": [],
+      "latestReport": {
+        "period": "2026 Q2",
+        "publishDate": "2026-08-18",
+        "reportUrl": "https://www.cellc.co.za/investors/"
+      }
+    }
+  ],
+  
+  "metrics": [
+    {
+      "id": "revenue_growth",
+      "name": "收入增长率",
+      "nameEn": "Revenue Growth",
+      "unit": "%",
+      "category": "growth",
+      "description": "季度收入同比增长率",
+      "higherIsBetter": true
+    },
+    {
+      "id": "ebitda_margin",
+      "name": "EBITDA利润率",
+      "nameEn": "EBITDA Margin",
+      "unit": "%",
+      "category": "profitability",
+      "description": "EBITDA占收入比例，反映运营效率",
+      "higherIsBetter": true
+    },
+    {
+      "id": "arpu",
+      "name": "ARPU",
+      "nameEn": "Average Revenue Per User",
+      "unit": "USD",
+      "category": "efficiency",
+      "description": "每用户平均收入",
+      "higherIsBetter": true
+    },
+    {
+      "id": "subscriber_growth",
+      "name": "订户增长率",
+      "nameEn": "Subscriber Growth",
+      "unit": "%",
+      "category": "growth",
+      "description": "订户数季度同比增长率",
+      "higherIsBetter": true
+    },
+    {
+      "id": "capex_ratio",
+      "name": "资本开支比",
+      "nameEn": "Capex/Revenue",
+      "unit": "%",
+      "category": "investment",
+      "description": "资本开支占收入比例",
+      "higherIsBetter": false
+    },
+    {
+      "id": "debt_ratio",
+      "name": "负债率",
+      "nameEn": "Debt Ratio",
+      "unit": "%",
+      "category": "financial_health",
+      "description": "总负债/总资产",
+      "higherIsBetter": false
+    },
+    {
+      "id": "fcf",
+      "name": "自由现金流",
+      "nameEn": "Free Cash Flow",
+      "unit": "USD M",
+      "category": "financial_health",
+      "description": "经营现金流减资本开支",
+      "higherIsBetter": true
+    },
+    {
+      "id": "churn_rate",
+      "name": "流失率",
+      "nameEn": "Churn Rate",
+      "unit": "%",
+      "category": "efficiency",
+      "description": "用户月度流失率",
+      "higherIsBetter": false
+    }
+  ],
+  
+  "quarterlyData": [
+    {
+      "operatorId": "mtn",
+      "period": "2025 Q3",
+      "data": {
+        "revenue_growth": 12.5,
+        "ebitda_margin": 42.3,
+        "arpu": 8.2,
+        "subscriber_growth": 8.1,
+        "capex_ratio": 18.5,
+        "debt_ratio": 35.2,
+        "fcf": 1250,
+        "churn_rate": 2.8
+      }
+    },
+    {
+      "operatorId": "mtn",
+      "period": "2025 Q4",
+      "data": {
+        "revenue_growth": 14.2,
+        "ebitda_margin": 43.1,
+        "arpu": 8.5,
+        "subscriber_growth": 9.3,
+        "capex_ratio": 19.2,
+        "debt_ratio": 34.8,
+        "fcf": 1380,
+        "churn_rate": 2.6
+      }
+    },
+    {
+      "operatorId": "mtn",
+      "period": "2026 Q1",
+      "data": {
+        "revenue_growth": 15.8,
+        "ebitda_margin": 44.2,
+        "arpu": 8.8,
+        "subscriber_growth": 10.2,
+        "capex_ratio": 17.8,
+        "debt_ratio": 33.5,
+        "fcf": 1520,
+        "churn_rate": 2.4
+      }
+    },
+    {
+      "operatorId": "mtn",
+      "period": "2026 Q2",
+      "data": {
+        "revenue_growth": 16.5,
+        "ebitda_margin": 45.1,
+        "arpu": 9.1,
+        "subscriber_growth": 11.5,
+        "capex_ratio": 18.2,
+        "debt_ratio": 32.8,
+        "fcf": 1680,
+        "churn_rate": 2.2
+      }
+    },
+    {
+      "operatorId": "vodacom",
+      "period": "2025 Q3",
+      "data": {
+        "revenue_growth": 8.2,
+        "ebitda_margin": 38.5,
+        "arpu": 7.5,
+        "subscriber_growth": 5.8,
+        "capex_ratio": 16.8,
+        "debt_ratio": 28.5,
+        "fcf": 980,
+        "churn_rate": 3.2
+      }
+    },
+    {
+      "operatorId": "vodacom",
+      "period": "2025 Q4",
+      "data": {
+        "revenue_growth": 9.5,
+        "ebitda_margin": 39.2,
+        "arpu": 7.8,
+        "subscriber_growth": 6.5,
+        "capex_ratio": 17.2,
+        "debt_ratio": 27.8,
+        "fcf": 1050,
+        "churn_rate": 3.0
+      }
+    },
+    {
+      "operatorId": "vodacom",
+      "period": "2026 Q1",
+      "data": {
+        "revenue_growth": 10.8,
+        "ebitda_margin": 40.1,
+        "arpu": 8.1,
+        "subscriber_growth": 7.2,
+        "capex_ratio": 16.5,
+        "debt_ratio": 26.5,
+        "fcf": 1120,
+        "churn_rate": 2.8
+      }
+    },
+    {
+      "operatorId": "vodacom",
+      "period": "2026 Q2",
+      "data": {
+        "revenue_growth": 11.2,
+        "ebitda_margin": 40.8,
+        "arpu": 8.3,
+        "subscriber_growth": 7.8,
+        "capex_ratio": 16.2,
+        "debt_ratio": 25.8,
+        "fcf": 1180,
+        "churn_rate": 2.6
+      }
+    },
+    {
+      "operatorId": "airtel",
+      "period": "2025 Q3",
+      "data": {
+        "revenue_growth": 18.5,
+        "ebitda_margin": 45.2,
+        "arpu": 6.8,
+        "subscriber_growth": 15.2,
+        "capex_ratio": 22.5,
+        "debt_ratio": 42.8,
+        "fcf": 850,
+        "churn_rate": 3.5
+      }
+    },
+    {
+      "operatorId": "airtel",
+      "period": "2025 Q4",
+      "data": {
+        "revenue_growth": 20.2,
+        "ebitda_margin": 46.5,
+        "arpu": 7.1,
+        "subscriber_growth": 16.8,
+        "capex_ratio": 21.8,
+        "debt_ratio": 41.5,
+        "fcf": 920,
+        "churn_rate": 3.2
+      }
+    },
+    {
+      "operatorId": "airtel",
+      "period": "2026 Q1",
+      "data": {
+        "revenue_growth": 22.5,
+        "ebitda_margin": 47.2,
+        "arpu": 7.4,
+        "subscriber_growth": 18.5,
+        "capex_ratio": 20.5,
+        "debt_ratio": 40.2,
+        "fcf": 980,
+        "churn_rate": 2.9
+      }
+    },
+    {
+      "operatorId": "airtel",
+      "period": "2026 Q2",
+      "data": {
+        "revenue_growth": 24.8,
+        "ebitda_margin": 48.1,
+        "arpu": 7.8,
+        "subscriber_growth": 20.2,
+        "capex_ratio": 19.8,
+        "debt_ratio": 38.5,
+        "fcf": 1120,
+        "churn_rate": 2.6
+      }
+    },
+    {
+      "operatorId": "econet",
+      "period": "2025 Q3",
+      "data": {
+        "revenue_growth": 5.2,
+        "ebitda_margin": 32.5,
+        "arpu": 4.2,
+        "subscriber_growth": 4.5,
+        "capex_ratio": 25.8,
+        "debt_ratio": 55.2,
+        "fcf": 120,
+        "churn_rate": 4.5
+      }
+    },
+    {
+      "operatorId": "econet",
+      "period": "2025 Q4",
+      "data": {
+        "revenue_growth": 6.8,
+        "ebitda_margin": 33.8,
+        "arpu": 4.5,
+        "subscriber_growth": 5.2,
+        "capex_ratio": 24.5,
+        "debt_ratio": 54.5,
+        "fcf": 145,
+        "churn_rate": 4.2
+      }
+    },
+    {
+      "operatorId": "econet",
+      "period": "2026 Q1",
+      "data": {
+        "revenue_growth": 8.5,
+        "ebitda_margin": 35.2,
+        "arpu": 4.8,
+        "subscriber_growth": 6.8,
+        "capex_ratio": 23.2,
+        "debt_ratio": 52.8,
+        "fcf": 180,
+        "churn_rate": 3.8
+      }
+    },
+    {
+      "operatorId": "econet",
+      "period": "2026 Q2",
+      "data": {
+        "revenue_growth": 9.2,
+        "ebitda_margin": 36.5,
+        "arpu": 5.1,
+        "subscriber_growth": 7.5,
+        "capex_ratio": 22.5,
+        "debt_ratio": 51.2,
+        "fcf": 210,
+        "churn_rate": 3.5
+      }
+    },
+    {
+      "operatorId": "telkom",
+      "period": "2025 Q3",
+      "data": {
+        "revenue_growth": -2.5,
+        "ebitda_margin": 25.8,
+        "arpu": 5.2,
+        "subscriber_growth": 2.8,
+        "capex_ratio": 28.5,
+        "debt_ratio": 48.5,
+        "fcf": 85,
+        "churn_rate": 5.2
+      }
+    },
+    {
+      "operatorId": "telkom",
+      "period": "2025 Q4",
+      "data": {
+        "revenue_growth": -1.2,
+        "ebitda_margin": 26.5,
+        "arpu": 5.5,
+        "subscriber_growth": 3.5,
+        "capex_ratio": 27.2,
+        "debt_ratio": 47.8,
+        "fcf": 95,
+        "churn_rate": 4.8
+      }
+    },
+    {
+      "operatorId": "telkom",
+      "period": "2026 Q1",
+      "data": {
+        "revenue_growth": 1.8,
+        "ebitda_margin": 27.2,
+        "arpu": 5.8,
+        "subscriber_growth": 4.2,
+        "capex_ratio": 26.5,
+        "debt_ratio": 46.5,
+        "fcf": 110,
+        "churn_rate": 4.5
+      }
+    },
+    {
+      "operatorId": "telkom",
+      "period": "2026 Q2",
+      "data": {
+        "revenue_growth": 3.5,
+        "ebitda_margin": 28.5,
+        "arpu": 6.1,
+        "subscriber_growth": 5.5,
+        "capex_ratio": 25.8,
+        "debt_ratio": 45.2,
+        "fcf": 125,
+        "churn_rate": 4.2
+      }
+    },
+    {
+      "operatorId": "cellc",
+      "period": "2025 Q3",
+      "data": {
+        "revenue_growth": -8.5,
+        "ebitda_margin": 18.2,
+        "arpu": 3.8,
+        "subscriber_growth": -5.2,
+        "capex_ratio": 15.2,
+        "debt_ratio": 72.5,
+        "fcf": -45,
+        "churn_rate": 8.5
+      }
+    },
+    {
+      "operatorId": "cellc",
+      "period": "2025 Q4",
+      "data": {
+        "revenue_growth": -6.2,
+        "ebitda_margin": 19.5,
+        "arpu": 4.1,
+        "subscriber_growth": -3.8,
+        "capex_ratio": 14.8,
+        "debt_ratio": 70.8,
+        "fcf": -25,
+        "churn_rate": 7.8
+      }
+    },
+    {
+      "operatorId": "cellc",
+      "period": "2026 Q1",
+      "data": {
+        "revenue_growth": -4.5,
+        "ebitda_margin": 20.8,
+        "arpu": 4.5,
+        "subscriber_growth": -2.5,
+        "capex_ratio": 14.2,
+        "debt_ratio": 68.5,
+        "fcf": 15,
+        "churn_rate": 6.5
+      }
+    },
+    {
+      "operatorId": "cellc",
+      "period": "2026 Q2",
+      "data": {
+        "revenue_growth": -2.8,
+        "ebitda_margin": 22.5,
+        "arpu": 4.8,
+        "subscriber_growth": -1.2,
+        "capex_ratio": 13.5,
+        "debt_ratio": 65.2,
+        "fcf": 45,
+        "churn_rate": 5.8
+      }
+    }
+  ],
+  
+  "rootCauseAnalysis": [
+    {
+      "operatorId": "mtn",
+      "period": "2026 Q2",
+      "metric": "revenue_growth",
+      "change": "+16.5%",
+      "primaryCauses": [
+        {
+          "cause": "数据业务收入增长",
+          "impact": "高",
+          "contribution": "+8.2%",
+          "evidence": "数据收入同比增长35%，订户数据使用量增长42%"
+        },
+        {
+          "cause": "尼日利亚市场强势增长",
+          "impact": "高",
+          "contribution": "+5.5%",
+          "evidence": "尼日利亚订户增长18%，ARPU提升12%"
+        },
+        {
+          "cause": "汇率有利影响",
+          "impact": "中",
+          "contribution": "+2.8%",
+          "evidence": "南非兰特兑美元升值5%"
+        }
+      ],
+      "secondaryCauses": [
+        {
+          "cause": "企业业务增长",
+          "contribution": "+1.2%",
+          "evidence": "B2B收入增长15%"
+        },
+        {
+          "cause": "数字服务收入",
+          "contribution": "+0.8%",
+          "evidence": "移动支付、流媒体等新业务贡献"
+        }
+      ],
+      "risks": [
+        "尼日利亚监管政策不确定性",
+        "南非电力短缺影响网络运营"
+      ],
+      "opportunities": [
+        "非洲数据中心需求增长",
+        "5G网络扩展机会"
+      ]
+    },
+    {
+      "operatorId": "airtel",
+      "period": "2026 Q2",
+      "metric": "revenue_growth",
+      "change": "+24.8%",
+      "primaryCauses": [
+        {
+          "cause": "尼日利亚市场领先地位",
+          "impact": "高",
+          "contribution": "+12.5%",
+          "evidence": "尼日利亚收入增长28%，市场份额提升至42%"
+        },
+        {
+          "cause": "东非市场快速扩张",
+          "impact": "高",
+          "contribution": "+8.2%",
+          "evidence": "肯尼亚、坦桑尼亚、乌干达合计增长32%"
+        },
+        {
+          "cause": "4G网络投资回报",
+          "impact": "中",
+          "contribution": "+4.1%",
+          "evidence": "4G覆盖率提升至85%，数据收入增长45%"
+        }
+      ],
+      "secondaryCauses": [
+        {
+          "cause": "移动支付业务增长",
+          "contribution": "+2.5%",
+          "evidence": "Airtel Money交易额增长55%"
+        },
+        {
+          "cause": "企业解决方案",
+          "contribution": "+1.8%",
+          "evidence": "B2B收入增长22%"
+        }
+      ],
+      "risks": [
+        "尼日利亚频谱拍卖成本",
+        "多国汇率波动风险"
+      ],
+      "opportunities": [
+        "非洲数字支付市场增长",
+        "与卫星运营商合作扩展覆盖"
+      ]
+    },
+    {
+      "operatorId": "vodacom",
+      "period": "2026 Q2",
+      "metric": "revenue_growth",
+      "change": "+11.2%",
+      "primaryCauses": [
+        {
+          "cause": "南非市场稳健增长",
+          "impact": "高",
+          "contribution": "+5.8%",
+          "evidence": "南非收入增长8%，企业业务增长12%"
+        },
+        {
+          "cause": "Safaricom贡献",
+          "impact": "高",
+          "contribution": "+4.2%",
+          "evidence": "肯尼亚Safaricom收入增长15%，M-Pesa交易额创新高"
+        },
+        {
+          "cause": "国际业务增长",
+          "impact": "中",
+          "contribution": "+1.2%",
+          "evidence": "坦桑尼亚、莫桑比克合计增长10%"
+        }
+      ],
+      "secondaryCauses": [
+        {
+          "cause": "物联网业务",
+          "contribution": "+0.8%",
+          "evidence": "IoT连接数增长25%"
+        }
+      ],
+      "risks": [
+        "南非电力危机影响",
+        "监管资费下调压力"
+      ],
+      "opportunities": [
+        "Vodafone集团协同效应",
+        "非洲金融科技市场"
+      ]
+    },
+    {
+      "operatorId": "econet",
+      "period": "2026 Q2",
+      "metric": "revenue_growth",
+      "change": "+9.2%",
+      "primaryCauses": [
+        {
+          "cause": "津巴布韦市场改善",
+          "impact": "高",
+          "contribution": "+5.5%",
+          "evidence": "本地货币稳定，消费恢复"
+        },
+        {
+          "cause": "EcoCash移动支付增长",
+          "impact": "高",
+          "contribution": "+3.2%",
+          "evidence": "移动支付交易额增长38%"
+        },
+        {
+          "cause": "区域扩展",
+          "impact": "中",
+          "contribution": "+0.5%",
+          "evidence": "莱索托、博茨瓦纳业务增长"
+        }
+      ],
+      "secondaryCauses": [
+        {
+          "cause": "企业业务",
+          "contribution": "+0.8%",
+          "evidence": "云服务、数据中心业务贡献"
+        }
+      ],
+      "risks": [
+        "津巴布韦政治经济不确定性",
+        "外汇获取困难",
+        "监管干预风险"
+      ],
+      "opportunities": [
+        "津巴布韦数字化机遇",
+        "区域一体化"
+      ]
+    },
+    {
+      "operatorId": "telkom",
+      "period": "2026 Q2",
+      "metric": "revenue_growth",
+      "change": "+3.5%",
+      "primaryCauses": [
+        {
+          "cause": "移动业务增长",
+          "impact": "高",
+          "contribution": "+4.2%",
+          "evidence": "移动订户增长8%，数据收入增长15%"
+        },
+        {
+          "cause": "固网业务下滑",
+          "impact": "高",
+          "contribution": "-2.5%",
+          "evidence": "固话收入持续下滑18%"
+        },
+        {
+          "cause": "企业业务稳定",
+          "impact": "中",
+          "contribution": "+1.8%",
+          "evidence": "BCX企业服务收入增长5%"
+        }
+      ],
+      "secondaryCauses": [
+        {
+          "cause": "成本优化",
+          "contribution": "+0.5%",
+          "evidence": "运营效率提升"
+        }
+      ],
+      "risks": [
+        "固网业务持续萎缩",
+        "市场竞争加剧",
+        "国有体制灵活性不足"
+      ],
+      "opportunities": [
+        "政企数字化转型",
+        "光纤到户扩展"
+      ]
+    },
+    {
+      "operatorId": "cellc",
+      "period": "2026 Q2",
+      "metric": "revenue_growth",
+      "change": "-2.8%",
+      "primaryCauses": [
+        {
+          "cause": "市场份额流失",
+          "impact": "高",
+          "contribution": "-4.5%",
+          "evidence": "订户继续流失，市场份额降至12%"
+        },
+        {
+          "cause": "重组效果显现",
+          "impact": "高",
+          "contribution": "+1.8%",
+          "evidence": "成本削减、聚焦数据业务初见成效"
+        },
+        {
+          "cause": "数据业务增长",
+          "impact": "中",
+          "contribution": "+1.2%",
+          "evidence": "数据收入增长12%"
+        }
+      ],
+      "secondaryCauses": [
+        {
+          "cause": "网络共享协议",
+          "contribution": "+0.5%",
+          "evidence": "与MTN网络共享降低成本"
+        },
+        {
+          "cause": "债务重组",
+          "contribution": "+0.2%",
+          "evidence": "利息支出减少"
+        }
+      ],
+      "risks": [
+        "持续亏损影响资金",
+        "竞争压力巨大",
+        "网络覆盖劣势"
+      ],
+      "opportunities": [
+        "差异化服务策略",
+        "MVNO模式转型"
+      ]
+    }
+  ],
+  
+  "alerts": [
+    {
+      "operatorId": "airtel",
+      "type": "opportunity",
+      "level": "high",
+      "title": "增长势头强劲",
+      "description": "Airtel Africa连续4季度收入增速超过20%，成为非洲增长最快的主要运营商",
+      "date": "2026-09-03"
+    },
+    {
+      "operatorId": "mtn",
+      "type": "opportunity",
+      "level": "medium",
+      "title": "数据业务转型成功",
+      "description": "MTN数据收入占比超过50%，成功从语音向数据转型",
+      "date": "2026-09-03"
+    },
+    {
+      "operatorId": "cellc",
+      "type": "risk",
+      "level": "high",
+      "title": "持续亏损风险",
+      "description": "Cell C连续6季度负增长，负债率超过65%，财务压力较大",
+      "date": "2026-09-03"
+    },
+    {
+      "operatorId": "econet",
+      "type": "risk",
+      "level": "medium",
+      "title": "汇率波动风险",
+      "description": "津巴布韦货币波动较大，影响财务报表稳定性",
+      "date": "2026-09-03"
+    },
+    {
+      "operatorId": "telkom",
+      "type": "info",
+      "level": "low",
+      "title": "转型进行中",
+      "description": "Telkom从固网向移动转型，收入首次转正",
+      "date": "2026-09-03"
+    }
+  ]
+}
