@@ -1,74 +1,84 @@
 <template>
   <div class="operator-filter">
-    <h3>
-      <span class="icon">🏢</span>
-      运营商筛选
-    </h3>
-    
-    <div class="filter-actions">
-      <button class="action-btn" @click="selectAll">
-        全选
-      </button>
-      <button class="action-btn" @click="selectNone">
-        清空
-      </button>
+    <!-- 可折叠的标题 -->
+    <div class="filter-header" @click="isCollapsed = !isCollapsed">
+      <h3>
+        <span class="icon">🏢</span>
+        运营商筛选
+        <span class="collapse-icon">{{ isCollapsed ? '▶' : '▼' }}</span>
+      </h3>
+      <div class="header-summary" v-if="isCollapsed">
+        <span class="selected-badge">{{ selectedOperators.length }}家已选</span>
+      </div>
     </div>
     
-    <div class="operator-list">
-      <label 
-        v-for="operator in operators" 
-        :key="operator.id"
-        class="operator-item"
-        :class="{ 
-          selected: selectedOperators.includes(operator.id),
-          [operator.country.toLowerCase().replace(/\s/g, '-')]: true
-        }"
-      >
-        <input 
-          type="checkbox"
-          :value="operator.id"
-          v-model="selectedOperators"
-          class="checkbox"
-        />
-        
-        <div class="operator-card">
-          <div class="operator-header">
-            <span class="operator-flag">{{ getFlag(operator.country) }}</span>
-            <span class="operator-name">{{ operator.name }}</span>
-            <!-- 官网链接 -->
-            <a 
-              v-if="operator.website"
-              :href="operator.website"
-              target="_blank"
-              class="website-link"
-              title="访问官网"
-              @click.stop
-            >
-              🔗
-            </a>
-          </div>
-          <div class="operator-meta">
-            <span class="country">{{ operator.country }}</span>
-            <span class="subscribers">{{ formatNumber(operator.subscribers) }}用户</span>
-          </div>
+    <!-- 可折叠的内容 -->
+    <div class="filter-content" :class="{ collapsed: isCollapsed }">
+      <div class="filter-actions">
+        <button class="action-btn" @click="selectAll">
+          全选
+        </button>
+        <button class="action-btn" @click="selectNone">
+          清空
+        </button>
+      </div>
+      
+      <div class="operator-list">
+        <label 
+          v-for="operator in operators" 
+          :key="operator.id"
+          class="operator-item"
+          :class="{ 
+            selected: selectedOperators.includes(operator.id),
+            [operator.country.toLowerCase().replace(/\s/g, '-')]: true
+          }"
+        >
+          <input 
+            type="checkbox"
+            :value="operator.id"
+            v-model="selectedOperators"
+            class="checkbox"
+          />
           
-          <!-- 状态指示器 -->
-          <div class="status-indicator" :class="operator.status">
-            <span class="status-dot"></span>
-            <span class="status-text">{{ getStatusText(operator.status) }}</span>
+          <div class="operator-card">
+            <div class="operator-header">
+              <span class="operator-flag">{{ getFlag(operator.country) }}</span>
+              <span class="operator-name">{{ operator.name }}</span>
+              <!-- 官网链接 -->
+              <a 
+                v-if="operator.website"
+                :href="operator.website"
+                target="_blank"
+                class="website-link"
+                title="访问官网"
+                @click.stop
+              >
+                🔗
+              </a>
+            </div>
+            <div class="operator-meta">
+              <span class="country">{{ operator.country }}</span>
+              <span class="subscribers">{{ formatNumber(operator.subscribers) }}用户</span>
+            </div>
+            
+            <!-- 状态指示器 -->
+            <div class="status-indicator" :class="operator.status">
+              <span class="status-dot"></span>
+              <span class="status-text">{{ getStatusText(operator.status) }}</span>
+            </div>
           </div>
-        </div>
-      </label>
-    </div>
-    
-    <div class="selection-count">
-      已选择 {{ selectedOperators.length }} / {{ operators.length }} 家运营商
+        </label>
+      </div>
+      
+      <div class="selection-count">
+        已选择 {{ selectedOperators.length }} / {{ operators.length }} 家运营商
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   operators: {
@@ -83,6 +93,9 @@ const props = defineProps({
 
 const emit = defineEmits(['update:selectedOperators'])
 
+// 折叠状态
+const isCollapsed = ref(false)
+
 // 双向绑定
 const selectedOperators = computed({
   get: () => props.selectedOperators,
@@ -96,7 +109,7 @@ const getFlag = (country) => {
     'Nigeria': '🇳🇬',
     'Zimbabwe': '🇿🇼',
     'Kenya': '🇰🇪',
-    'Ghana': '🇬🇭',
+    'Ghana': '🇧🇭',
     'Tanzania': '🇹🇿'
   }
   return flags[country] || '🌍'
@@ -133,23 +146,77 @@ const selectNone = () => {
 
 <style scoped>
 .operator-filter {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  overflow: hidden;
+}
+
+/* 可折叠标题 */
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.filter-header:hover {
+  background: rgba(99, 102, 241, 0.05);
 }
 
 h3 {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 16px;
+  color: #e2e8f0;
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .icon {
-  font-size: 14px;
+  font-size: 15px;
+}
+
+.collapse-icon {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-left: auto;
+  transition: transform 0.2s;
+}
+
+.header-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selected-badge {
+  padding: 4px 10px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a5b4fc;
+}
+
+/* 可折叠内容 */
+.filter-content {
+  padding: 0 16px 16px 16px;
+  max-height: 500px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-content.collapsed {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
 }
 
 .filter-actions {

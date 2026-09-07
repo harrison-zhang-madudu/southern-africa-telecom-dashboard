@@ -1,57 +1,67 @@
 <template>
   <div class="metric-filter">
-    <h3>
-      <span class="icon">📊</span>
-      指标筛选
-    </h3>
-    
-    <div class="filter-actions">
-      <button class="action-btn" @click="selectAll">
-        全选
-      </button>
-      <button class="action-btn" @click="selectNone">
-        清空
-      </button>
+    <!-- 可折叠的标题 -->
+    <div class="filter-header" @click="isCollapsed = !isCollapsed">
+      <h3>
+        <span class="icon">📊</span>
+        指标筛选
+        <span class="collapse-icon">{{ isCollapsed ? '▶' : '▼' }}</span>
+      </h3>
+      <div class="header-summary" v-if="isCollapsed">
+        <span class="selected-badge">{{ selectedMetrics.length }}个已选</span>
+      </div>
     </div>
     
-    <div class="metric-list">
-      <label 
-        v-for="metric in metrics" 
-        :key="metric.id"
-        class="metric-item"
-        :class="{ selected: selectedMetrics.includes(metric.id) }"
-      >
-        <input 
-          type="checkbox"
-          :value="metric.id"
-          v-model="selectedMetrics"
-          class="checkbox"
-        />
-        
-        <div class="metric-card">
-          <span class="metric-icon">{{ metric.icon }}</span>
-          <div class="metric-info">
-            <span class="metric-name">{{ metric.name }}</span>
-            <span class="metric-unit">单位: {{ metric.unit }}</span>
-          </div>
+    <!-- 可折叠的内容 -->
+    <div class="filter-content" :class="{ collapsed: isCollapsed }">
+      <div class="filter-actions">
+        <button class="action-btn" @click="selectAll">
+          全选
+        </button>
+        <button class="action-btn" @click="selectNone">
+          清空
+        </button>
+      </div>
+      
+      <div class="metric-list">
+        <label 
+          v-for="metric in metrics" 
+          :key="metric.id"
+          class="metric-item"
+          :class="{ selected: selectedMetrics.includes(metric.id) }"
+        >
+          <input 
+            type="checkbox"
+            :value="metric.id"
+            v-model="selectedMetrics"
+            class="checkbox"
+          />
           
-          <div class="check-indicator">
-            <svg v-if="selectedMetrics.includes(metric.id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <polyline points="20 6 9 17 4 12"></polyline>
-            </svg>
+          <div class="metric-card">
+            <span class="metric-icon">{{ metric.icon }}</span>
+            <div class="metric-info">
+              <span class="metric-name">{{ metric.name }}</span>
+              <span class="metric-unit">单位: {{ metric.unit }}</span>
+            </div>
+            
+            <div class="check-indicator">
+              <svg v-if="selectedMetrics.includes(metric.id)" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
           </div>
-        </div>
-      </label>
-    </div>
-    
-    <div class="selection-count">
-      已选择 {{ selectedMetrics.length }} / {{ metrics.length }} 个指标
+        </label>
+      </div>
+      
+      <div class="selection-count">
+        已选择 {{ selectedMetrics.length }} / {{ metrics.length }} 个指标
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 
 const props = defineProps({
   metrics: {
@@ -65,6 +75,9 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:selectedMetrics'])
+
+// 折叠状态
+const isCollapsed = ref(false)
 
 const selectedMetrics = computed({
   get: () => props.selectedMetrics,
@@ -82,23 +95,77 @@ const selectNone = () => {
 
 <style scoped>
 .metric-filter {
-  margin-bottom: 24px;
+  margin-bottom: 16px;
+  border-radius: 12px;
+  background: rgba(15, 23, 42, 0.4);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  overflow: hidden;
+}
+
+/* 可折叠标题 */
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.filter-header:hover {
+  background: rgba(99, 102, 241, 0.05);
 }
 
 h3 {
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 600;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 16px;
+  color: #e2e8f0;
+  margin: 0;
   display: flex;
   align-items: center;
   gap: 8px;
 }
 
 .icon {
-  font-size: 14px;
+  font-size: 15px;
+}
+
+.collapse-icon {
+  font-size: 10px;
+  color: #94a3b8;
+  margin-left: auto;
+  transition: transform 0.2s;
+}
+
+.header-summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.selected-badge {
+  padding: 4px 10px;
+  background: linear-gradient(135deg, rgba(99, 102, 241, 0.2) 0%, rgba(139, 92, 246, 0.2) 100%);
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 600;
+  color: #a5b4fc;
+}
+
+/* 可折叠内容 */
+.filter-content {
+  padding: 0 16px 16px 16px;
+  max-height: 400px;
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.filter-content.collapsed {
+  max-height: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+  opacity: 0;
 }
 
 .filter-actions {
