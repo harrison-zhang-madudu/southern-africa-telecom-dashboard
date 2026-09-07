@@ -35,7 +35,14 @@
       
       <!-- 根因分析 -->
       <div class="root-cause-section" v-if="getRootCause(operator.id)">
-        <h4>🔍 根因分析</h4>
+        <div class="root-cause-header">
+          <h4>🔍 根因分析</h4>
+          <div class="color-legend">
+            <span class="legend-item"><span class="legend-dot positive"></span>正面因素（增长/改善）</span>
+            <span class="legend-item"><span class="legend-dot negative"></span>负面因素（下降/风险）</span>
+            <span class="legend-item"><span class="legend-dot neutral"></span>中性因素（持平/稳定）</span>
+          </div>
+        </div>
         <div class="root-cause-content">
           <div class="analysis-metrics">
             <div 
@@ -310,11 +317,44 @@ export default {
   padding-top: 24px;
 }
 
-.root-cause-section h4 {
+.root-cause-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.root-cause-header h4 {
   font-size: 16px;
   color: #e2e8f0;
-  margin-bottom: 16px;
+  margin: 0;
 }
+
+.color-legend {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #94a3b8;
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.legend-dot.positive { background: #10b981; }
+.legend-dot.negative { background: #ef4444; }
+.legend-dot.neutral { background: #64748b; }
 
 .root-cause-content {
   display: flex;

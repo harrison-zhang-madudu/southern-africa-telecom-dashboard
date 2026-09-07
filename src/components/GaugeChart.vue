@@ -53,7 +53,15 @@ const initChart = () => {
     renderer: 'svg'
   })
   
-  const percent = (props.value / props.max) * 100
+  const percent = props.value / props.max
+  
+  // 根据数值确定颜色
+  let currentColor = props.color
+  if (percent < 0.3) {
+    currentColor = '#ef4444'
+  } else if (percent < 0.7) {
+    currentColor = '#f59e0b'
+  }
   
   const option = {
     series: [{
@@ -62,37 +70,75 @@ const initChart = () => {
       endAngle: -20,
       min: 0,
       max: props.max,
-      radius: '100%',
-      center: ['50%', '70%'],
-      splitNumber: 4,
+      radius: '95%',
+      center: ['50%', '65%'],
+      splitNumber: 5,
+      // 进度条样式
+      progress: {
+        show: true,
+        width: 12,
+        itemStyle: {
+          color: {
+            type: 'linear',
+            x: 0,
+            y: 0,
+            x2: 1,
+            y2: 0,
+            colorStops: [
+              { offset: 0, color: currentColor },
+              { offset: 1, color: currentColor }
+            ]
+          },
+          shadowColor: currentColor,
+          shadowBlur: 8
+        }
+      },
+      // 背景轨道
       axisLine: {
         lineStyle: {
-          width: 8,
+          width: 12,
           color: [
-            [0.3, '#ef4444'],
-            [0.7, '#f59e0b'],
-            [1, props.color]
+            [1, 'rgba(148, 163, 184, 0.15)']
           ]
         }
       },
+      // 指针样式 - 颜色与进度条一致
       pointer: {
-        icon: 'path://M12,2L15,8L12,14L9,8L12,2Z',
-        length: '60%',
-        width: 6,
-        offsetCenter: [0, '-10%'],
+        show: true,
+        length: '55%',
+        width: 5,
+        offsetCenter: [0, '-15%'],
         itemStyle: {
-          color: props.color
+          color: currentColor,
+          shadowColor: currentColor,
+          shadowBlur: 6
         }
       },
+      // 刻度线
       axisTick: {
-        show: false
+        show: true,
+        distance: -18,
+        length: 4,
+        lineStyle: {
+          color: 'rgba(148, 163, 184, 0.4)',
+          width: 1
+        }
       },
+      // 分割线
       splitLine: {
-        show: false
+        show: true,
+        distance: -22,
+        length: 8,
+        lineStyle: {
+          color: 'rgba(148, 163, 184, 0.6)',
+          width: 2
+        }
       },
+      // 刻度标签
       axisLabel: {
         show: false
       },
+      // 中心数值
       detail: {
         show: false
       },
@@ -126,33 +172,38 @@ onUnmounted(() => {
   flex-direction: column;
   align-items: center;
   height: 100%;
+  padding: 8px;
 }
 
 .chart {
   width: 100%;
-  height: 120px;
+  height: 100px;
+  min-height: 80px;
 }
 
 .info {
   text-align: center;
-  margin-top: 8px;
+  margin-top: 4px;
 }
 
 .title {
   font-size: 11px;
   color: #94a3b8;
-  margin-bottom: 4px;
+  margin-bottom: 2px;
+  white-space: nowrap;
 }
 
 .value {
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 700;
   color: #f1f5f9;
+  font-family: 'SF Pro Display', -apple-system, sans-serif;
 }
 
 .unit {
-  font-size: 12px;
+  font-size: 11px;
   color: #64748b;
   margin-left: 2px;
+  font-weight: 400;
 }
 </style>

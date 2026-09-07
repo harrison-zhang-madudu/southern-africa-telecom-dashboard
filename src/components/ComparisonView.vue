@@ -219,7 +219,29 @@ const initRadarChart = () => {
   
   radarChart = echarts.init(radarRef.value, null, { renderer: 'svg' })
   
-  // 构建数据 - 使用动态metricConfigs
+  // 先计算所有运营商的数据，找出每个指标的最大值
+  const allData = props.operators.map(op => {
+    const latestData = props.quarterlyData
+      .filter(d => d.operatorId === op.id)
+      .sort((a, b) => b.period.localeCompare(a.period))[0]
+    return { op, latestData }
+  })
+  
+  // 动态计算每个指标的最大值（取所有运营商该指标最大值的1.2倍）
+  const dynamicMax = {}
+  metricConfigs.value.forEach(config => {
+    let maxVal = 0
+    allData.forEach(({ latestData }) => {
+      let val = latestData?.[config.key] || 0
+      if (config.inverse) {
+        val = Math.max(0, config.max - val)
+      }
+      maxVal = Math.max(maxVal, val)
+    })
+    dynamicMax[config.key] = Math.max(maxVal * 1.2, config.max) // 至少保留原始max
+  })
+  
+  // 构建数据
   const series = props.operators.map((op, index) => {
     const latestData = props.quarterlyData
       .filter(d => d.operatorId === op.id)
@@ -229,7 +251,6 @@ const initRadarChart = () => {
       name: op.name,
       value: metricConfigs.value.map(config => {
         let val = latestData?.[config.key] || 0
-        // 反向指标处理（负债率、流失率）
         if (config.inverse) {
           val = Math.max(0, config.max - val)
         }
@@ -244,6 +265,14 @@ const initRadarChart = () => {
       },
       itemStyle: {
         color: colors[index % colors.length]
+      },
+      label: {
+        show: true,
+        formatter: (params) => {
+          return params.value?.toFixed(1) || ''
+        },
+        color: '#e2e8f0',
+        fontSize: 10
       }
     }
   })
@@ -253,10 +282,18 @@ const initRadarChart = () => {
       trigger: 'item',
       backgroundColor: 'rgba(15, 23, 42, 0.9)',
       borderColor: 'rgba(148, 163, 184, 0.2)',
-      textStyle: { color: '#e2e8f0' }
+      textStyle: { color: '#e2e8f0' },
+      formatter: (params) => {
+        let html = `<div style="font-weight:600;margin-bottom:8px">${params.name}</div>`
+        params.value.forEach((val, idx) => {
+          const config = metricConfigs.value[idx]
+          html += `<div style="margin:4px 0">${config.name}: ${val.toFixed(2)}</div>`
+        })
+        return html
+      }
     },
     radar: {
-      indicator: metricConfigs.value.map(c => ({ name: c.name, max: c.max })),
+      indicator: metricConfigs.value.map(c => ({ name: c.name, max: dynamicMax[c.key] })),
       shape: 'polygon',
       splitNumber: 4,
       axisName: {

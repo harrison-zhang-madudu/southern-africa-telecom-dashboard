@@ -156,8 +156,8 @@ h3 {
 /* 可折叠内容 */
 .filter-content {
   padding: 0 16px 16px 16px;
-  max-height: 400px;
-  overflow: hidden;
+  max-height: 350px;
+  overflow-y: auto;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
@@ -166,6 +166,25 @@ h3 {
   padding-top: 0;
   padding-bottom: 0;
   opacity: 0;
+}
+
+/* 滚动条样式 */
+.filter-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.filter-content::-webkit-scrollbar-track {
+  background: rgba(30, 41, 59, 0.3);
+  border-radius: 3px;
+}
+
+.filter-content::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.4);
+  border-radius: 3px;
+}
+
+.filter-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(99, 102, 241, 0.6);
 }
 
 .filter-actions {

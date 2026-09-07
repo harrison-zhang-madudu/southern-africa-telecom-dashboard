@@ -285,7 +285,7 @@ const alerts = computed(() => {
   return alertList.slice(0, 6)
 })
 
-// 指标数据
+// 指标数据 - 对选中运营商求和
 const selectedMetricsData = computed(() => {
   const metricConfigs = {
     revenue: { name: '营业收入', icon: '💰', unit: '亿美元' },
@@ -301,25 +301,69 @@ const selectedMetricsData = computed(() => {
   return props.selectedMetrics.map(metricId => {
     const config = metricConfigs[metricId] || { name: metricId, icon: '📊', unit: '' }
     
-    // 计算平均值和趋势
-    const values = props.quarterlyData.map(d => d[metricId]).filter(v => v != null)
-    const avgValue = values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0
+    // 筛选选中运营商的数据
+    const filteredData = props.quarterlyData.filter(d => 
+      props.operators.some(op => op.id === d.operatorId)
+    )
     
-    // 计算变化
-    const sortedData = [...props.quarterlyData].sort((a, b) => b.period.localeCompare(a.period))
-    const latest = sortedData[0]?.[metricId] || 0
-    const previous = sortedData[1]?.[metricId] || latest
-    const changePercent = previous !== 0 ? ((latest - previous) / Math.abs(previous)) * 100 : 0
+    // 对收入、自由现金流等绝对值指标求和，对利润率、增长率等比率指标求平均
+    const isAbsoluteMetric = ['revenue', 'fcf'].includes(metricId)
     
+    // 按运营商分组，获取每个运营商的最新值
+    const operatorLatestValues = {}
+    const operatorPreviousValues = {}
+    
+    props.operators.forEach(op => {
+      const opData = filteredData
+        .filter(d => d.operatorId === op.id)
+        .sort((a, b) => b.period.localeCompare(a.period))
+      if (opData.length > 0) {
+        operatorLatestValues[op.id] = opData[0]?.[metricId] || 0
+        operatorPreviousValues[op.id] = opData[1]?.[metricId] || opData[0]?.[metricId] || 0
+      }
+    })
+    
+    // 计算总值
+    let totalValue = 0
+    if (isAbsoluteMetric) {
+      // 绝对值指标：求和
+      totalValue = Object.values(operatorLatestValues).reduce((a, b) => a + b, 0)
+    } else {
+      // 比率指标：求平均
+      const values = Object.values(operatorLatestValues).filter(v => v != null && v !== 0)
+      totalValue = values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0
+    }
+    
+    // 计算变化率
+    let previousTotal = 0
+    if (isAbsoluteMetric) {
+      previousTotal = Object.values(operatorPreviousValues).reduce((a, b) => a + b, 0)
+    } else {
+      const values = Object.values(operatorPreviousValues).filter(v => v != null && v !== 0)
+      previousTotal = values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0
+    }
+    
+    const changePercent = previousTotal !== 0 ? ((totalValue - previousTotal) / Math.abs(previousTotal)) * 100 : 0
     const trend = changePercent > 2 ? 'up' : changePercent < -2 ? 'down' : 'stable'
     
-    // 趋势数据
-    const trendData = sortedData.slice(0, 8).reverse().map(d => d[metricId] || 0)
+    // 趋势数据 - 按季度汇总
+    const sortedData = [...filteredData].sort((a, b) => a.period.localeCompare(b.period))
+    const periodMap = {}
+    sortedData.forEach(d => {
+      if (!periodMap[d.period]) periodMap[d.period] = []
+      periodMap[d.period].push(d[metricId] || 0)
+    })
+    const trendData = Object.keys(periodMap).sort().slice(-8).map(period => {
+      const values = periodMap[period]
+      return isAbsoluteMetric 
+        ? values.reduce((a, b) => a + b, 0)
+        : values.reduce((a, b) => a + b, 0) / values.length
+    })
     
     return {
       id: metricId,
       ...config,
-      avgValue,
+      avgValue: totalValue,
       changePercent,
       trend,
       trendData

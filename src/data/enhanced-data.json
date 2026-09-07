@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "dashboardVersion": "2.0.0",
-    "lastUpdated": "2026-09-03T17:00:00+02:00",
-    "lastUpdatedSA": "2026年9月3日 17:00 SAST",
+    "dashboardVersion": "2.1.0",
+    "lastUpdated": "2026-09-07T12:00:00+02:00",
+    "lastUpdatedSA": "2026年9月7日 12:00 SAST",
     "dataPeriod": {
       "start": "2022Q1",
       "end": "2026Q2",
@@ -35,6 +35,8 @@
       "flag": "🇿🇦",
       "currency": "ZAR",
       "currencySymbol": "R",
+      "subscribers": 290,
+      "status": "growth",
       "stock": {
         "symbol": "MTN.JO",
         "exchange": "Johannesburg Stock Exchange (JSE)",
@@ -71,6 +73,8 @@
       "flag": "🇿🇦",
       "currency": "ZAR",
       "currencySymbol": "R",
+      "subscribers": 142,
+      "status": "stable",
       "stock": {
         "symbol": "VOD.JO",
         "exchange": "Johannesburg Stock Exchange (JSE)",
@@ -107,6 +111,8 @@
       "flag": "🇳🇬",
       "currency": "NGN",
       "currencySymbol": "₦",
+      "subscribers": 152,
+      "status": "growth",
       "stock": {
         "symbol": "AIRTEL.NG",
         "exchange": "Nigerian Stock Exchange (NGX)",
@@ -143,6 +149,8 @@
       "flag": "🇿🇼",
       "currency": "ZWL",
       "currencySymbol": "Z$",
+      "subscribers": 12,
+      "status": "growth",
       "stock": {
         "symbol": "ECN.ZW",
         "exchange": "Zimbabwe Stock Exchange (ZSE)",
@@ -179,6 +187,8 @@
       "flag": "🇿🇦",
       "currency": "ZAR",
       "currencySymbol": "R",
+      "subscribers": 18,
+      "status": "decline",
       "stock": {
         "symbol": "TKG.JO",
         "exchange": "Johannesburg Stock Exchange (JSE)",
@@ -215,6 +225,8 @@
       "flag": "🇿🇦",
       "currency": "ZAR",
       "currencySymbol": "R",
+      "subscribers": 8,
+      "status": "decline",
       "stock": {
         "symbol": null,
         "exchange": null,
