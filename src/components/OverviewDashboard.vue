@@ -1,5 +1,21 @@
 <template>
   <div class="overview-dashboard">
+    <!-- 年份筛选器（单选） -->
+    <div class="year-filter-inline">
+      <span class="filter-label">📅 数据年份：</span>
+      <div class="year-chips">
+        <button 
+          v-for="year in availableYears" 
+          :key="year"
+          :class="{ active: selectedYear === year }"
+          @click="emit('update:selectedYear', year)"
+          class="year-chip"
+        >
+          {{ year }}
+        </button>
+      </div>
+    </div>
+    
     <!-- 顶部预警区域 -->
     <section class="alerts-section">
       <h2>
@@ -61,6 +77,22 @@
         运营商趋势对比
       </h2>
       
+      <!-- 趋势图独立的多选年份筛选 -->
+      <div class="trend-year-filter">
+        <span class="filter-label">年份选择（多选）：</span>
+        <div class="year-chips">
+          <button 
+            v-for="year in availableYears" 
+            :key="year"
+            :class="{ active: trendSelectedYears.includes(year) }"
+            @click="toggleTrendYear(year)"
+            class="year-chip"
+          >
+            {{ year }}
+          </button>
+        </div>
+      </div>
+      
       <div class="chart-controls">
         <label>
           <span>选择指标:</span>
@@ -87,6 +119,23 @@
         <span class="icon">📋</span>
         详细数据表
       </h2>
+      
+      <!-- 半年间隔筛选 -->
+      <div class="half-year-filter">
+        <span class="filter-label">时间范围：</span>
+        <div class="half-year-chips">
+          <button 
+            v-for="hy in halfYearOptions" 
+            :key="hy.value"
+            :class="{ active: selectedHalfYear === hy.value }"
+            @click="selectedHalfYear = hy.value"
+            class="half-year-chip"
+          >
+            {{ hy.label }}
+          </button>
+        </div>
+      </div>
+      
       <div class="table-container">
         <table class="data-table">
           <thead>
@@ -103,9 +152,9 @@
                 <span class="name">{{ op.name }}</span>
               </td>
               <td v-for="m in selectedMetrics" :key="m" class="value-cell">
-                {{ formatValue(getOperatorMetric(op.id, m), getMetricUnit(m)) }}
+                {{ formatValue(getOperatorMetricForHalfYear(op.id, m), getMetricUnit(m)) }}
               </td>
-              <td class="quarter-cell">{{ getLatestQuarter(op.id) }}</td>
+              <td class="quarter-cell">{{ getLatestQuarterForHalfYear(op.id) }}</td>
             </tr>
           </tbody>
         </table>
@@ -122,10 +171,56 @@ import MiniChart from './MiniChart.vue'
 const props = defineProps({
   operators: Array,
   selectedMetrics: Array,
-  quarterlyData: Array
+  quarterlyData: Array,
+  selectedYear: Number,
+  availableYears: Array,
+  allQuarterlyData: Array
 })
 
+const emit = defineEmits(['update:selectedYear'])
+
 const selectedTrendMetric = ref(props.selectedMetrics[0] || 'revenue')
+
+// 趋势图独立的多选年份
+const trendSelectedYears = ref([...props.availableYears])
+
+// 半年间隔筛选
+const selectedHalfYear = ref('2026H2') // 默认最新半年
+
+// 半年选项
+const halfYearOptions = computed(() => {
+  return [
+    { value: '2026H2', label: '2026年下半年' },
+    { value: '2026H1', label: '2026年上半年' },
+    { value: '2025H2', label: '2025年下半年' },
+    { value: '2025H1', label: '2025年上半年' },
+    { value: '2024H2', label: '2024年下半年' },
+    { value: '2024H1', label: '2024年上半年' }
+  ]
+})
+
+// 根据半年筛选获取数据
+const getHalfYearPeriods = (halfYear) => {
+  if (halfYear.endsWith('H1')) {
+    return [halfYear.substring(0, 4) + 'Q1', halfYear.substring(0, 4) + 'Q2']
+  } else {
+    return [halfYear.substring(0, 4) + 'Q3', halfYear.substring(0, 4) + 'Q4']
+  }
+}
+
+// 切换趋势图年份
+const toggleTrendYear = (year) => {
+  const index = trendSelectedYears.value.indexOf(year)
+  if (index > -1) {
+    // 至少保留一个年份
+    if (trendSelectedYears.value.length > 1) {
+      trendSelectedYears.value.splice(index, 1)
+    }
+  } else {
+    trendSelectedYears.value.push(year)
+    trendSelectedYears.value.sort((a, b) => a - b)
+  }
+}
 
 // 预警数据
 const alerts = computed(() => {
@@ -134,7 +229,7 @@ const alerts = computed(() => {
   props.operators.forEach(op => {
     const latestData = props.quarterlyData
       .filter(d => d.operatorId === op.id)
-      .sort((a, b) => b.quarter.localeCompare(a.quarter))[0]
+      .sort((a, b) => b.period.localeCompare(a.period))[0]
     
     if (latestData) {
       // 检测风险
@@ -211,7 +306,7 @@ const selectedMetricsData = computed(() => {
     const avgValue = values.length > 0 ? values.reduce((a, b) => a + b, 0) / values.length : 0
     
     // 计算变化
-    const sortedData = [...props.quarterlyData].sort((a, b) => b.quarter.localeCompare(a.quarter))
+    const sortedData = [...props.quarterlyData].sort((a, b) => b.period.localeCompare(a.period))
     const latest = sortedData[0]?.[metricId] || 0
     const previous = sortedData[1]?.[metricId] || latest
     const changePercent = previous !== 0 ? ((latest - previous) / Math.abs(previous)) * 100 : 0
@@ -232,11 +327,15 @@ const selectedMetricsData = computed(() => {
   })
 })
 
-// 趋势图数据
+// 趋势图数据 - 使用多选年份
 const trendChartData = computed(() => {
-  return props.quarterlyData
+  return (props.allQuarterlyData || [])
     .filter(d => props.operators.some(op => op.id === d.operatorId))
-    .sort((a, b) => a.quarter.localeCompare(b.quarter))
+    .filter(d => {
+      const year = parseInt(d.period.substring(0, 4))
+      return trendSelectedYears.value.includes(year)
+    })
+    .sort((a, b) => a.period.localeCompare(b.period))
 })
 
 // 辅助方法
@@ -295,15 +394,33 @@ const formatValue = (value, unit) => {
 const getOperatorMetric = (operatorId, metricId) => {
   const data = props.quarterlyData
     .filter(d => d.operatorId === operatorId)
-    .sort((a, b) => b.quarter.localeCompare(a.quarter))[0]
+    .sort((a, b) => b.period.localeCompare(a.period))[0]
   return data?.[metricId] || 0
 }
 
 const getLatestQuarter = (operatorId) => {
   const data = props.quarterlyData
     .filter(d => d.operatorId === operatorId)
-    .sort((a, b) => b.quarter.localeCompare(a.quarter))[0]
-  return data?.quarter || '-'
+    .sort((a, b) => b.period.localeCompare(a.period))[0]
+  return data?.periodLabel || '-'
+}
+
+// 根据半年筛选获取指标值
+const getOperatorMetricForHalfYear = (operatorId, metricId) => {
+  const periods = getHalfYearPeriods(selectedHalfYear.value)
+  const data = (props.allQuarterlyData || [])
+    .filter(d => d.operatorId === operatorId && periods.includes(d.period))
+    .sort((a, b) => b.period.localeCompare(a.period))[0]
+  return data?.[metricId] || 0
+}
+
+// 根据半年筛选获取最新季度
+const getLatestQuarterForHalfYear = (operatorId) => {
+  const periods = getHalfYearPeriods(selectedHalfYear.value)
+  const data = (props.allQuarterlyData || [])
+    .filter(d => d.operatorId === operatorId && periods.includes(d.period))
+    .sort((a, b) => b.period.localeCompare(a.period))[0]
+  return data?.periodLabel || '-'
 }
 </script>
 
@@ -312,6 +429,50 @@ const getLatestQuarter = (operatorId) => {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+/* 年份筛选器 */
+.year-filter-inline {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(30, 41, 59, 0.5);
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.filter-label {
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.year-chips {
+  display: flex;
+  gap: 6px;
+}
+
+.year-chip {
+  padding: 6px 14px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 6px;
+  background: rgba(30, 41, 59, 0.5);
+  color: #cbd5e1;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.year-chip:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.year-chip.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #3b82f6;
+  color: white;
 }
 
 section {
@@ -460,6 +621,51 @@ h2 {
   height: 40px;
 }
 
+/* 趋势图年份筛选 */
+.trend-year-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.trend-year-filter .filter-label {
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.trend-year-filter .year-chips {
+  display: flex;
+  gap: 6px;
+}
+
+.trend-year-filter .year-chip {
+  padding: 6px 14px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 6px;
+  background: rgba(30, 41, 59, 0.5);
+  color: #cbd5e1;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.trend-year-filter .year-chip:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.trend-year-filter .year-chip.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #3b82f6;
+  color: white;
+}
+
 /* 趋势图 */
 .chart-controls {
   margin-bottom: 16px;
@@ -488,6 +694,51 @@ h2 {
 }
 
 /* 数据表格 */
+.half-year-filter {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding: 12px 16px;
+  background: rgba(15, 23, 42, 0.4);
+  border-radius: 8px;
+  border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.half-year-filter .filter-label {
+  font-size: 13px;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.half-year-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.half-year-chip {
+  padding: 6px 14px;
+  border: 1px solid rgba(148, 163, 184, 0.2);
+  border-radius: 6px;
+  background: rgba(30, 41, 59, 0.5);
+  color: #cbd5e1;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.half-year-chip:hover {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: rgba(59, 130, 246, 0.3);
+}
+
+.half-year-chip.active {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+  border-color: #3b82f6;
+  color: white;
+}
+
 .table-container {
   overflow-x: auto;
 }

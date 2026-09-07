@@ -1,80 +1,46 @@
 <template>
   <div class="app">
     <Header 
-      :lastUpdate="enhancedData.metadata.lastUpdatedSA"
+      :lastUpdate="currentTime"
       :dataSource="enhancedData.metadata.dataSource"
+      :currentView="currentView"
+      :sidebarCollapsed="sidebarCollapsed"
+      :refreshing="refreshing"
       @refresh="handleRefresh"
+      @update:currentView="currentView = $event"
+      @toggleSidebar="sidebarCollapsed = !sidebarCollapsed"
     />
     
     <div class="main-content">
-      <!-- 左侧筛选面板 -->
-      <aside class="filter-panel">
-        <OperatorFilter 
-          :operators="enhancedData.operators"
-          v-model:selectedOperators="selectedOperators"
-        />
-        <MetricFilter 
-          :metrics="availableMetrics"
-          v-model:selectedMetrics="selectedMetrics"
-        />
-        
-        <!-- 年份筛选 -->
-        <div class="year-filter">
-          <h3>📅 年份筛选</h3>
-          <div class="year-buttons">
-            <button 
-              v-for="year in availableYears"
-              :key="year"
-              :class="{ active: selectedYears.includes(year) }"
-              @click="toggleYear(year)"
-            >
-              {{ year }}
-            </button>
-          </div>
+      <!-- 左侧筛选面板（可折叠） -->
+      <aside class="filter-panel" :class="{ collapsed: sidebarCollapsed }">
+        <div class="filter-panel-content">
+          <OperatorFilter 
+            :operators="enhancedData.operators"
+            v-model:selectedOperators="selectedOperators"
+          />
+          <MetricFilter 
+            :metrics="availableMetrics"
+            v-model:selectedMetrics="selectedMetrics"
+          />
+          
+          <!-- 数据说明 -->
+          <DataInfo :metadata="enhancedData.metadata" />
         </div>
-        
-        <div class="view-switcher">
-          <h3>视图模式</h3>
-          <div class="view-buttons">
-            <button 
-              :class="{ active: currentView === 'overview' }"
-              @click="currentView = 'overview'"
-            >
-              📊 总览
-            </button>
-            <button 
-              :class="{ active: currentView === 'comparison' }"
-              @click="currentView = 'comparison'"
-            >
-              ⚖️ 对比
-            </button>
-            <button 
-              :class="{ active: currentView === 'detail' }"
-              @click="currentView = 'detail'"
-            >
-              📋 详情
-            </button>
-            <button 
-              :class="{ active: currentView === 'macro' }"
-              @click="currentView = 'macro'"
-            >
-              🌍 宏观
-            </button>
-          </div>
-        </div>
-        
-        <!-- 数据说明 -->
-        <DataInfo :metadata="enhancedData.metadata" />
       </aside>
       
       <!-- 主内容区 -->
-      <main class="content-area">
+      <main class="content-area" :class="{ expanded: sidebarCollapsed }">
         <!-- 总览视图 -->
         <OverviewDashboard 
           v-if="currentView === 'overview'"
           :operators="filteredOperators"
           :selectedMetrics="selectedMetrics"
           :quarterlyData="filteredQuarterlyData"
+          :selectedYear="selectedYear"
+          :availableYears="availableYears"
+          :allQuarterlyData="enhancedData.quarterlyData || []"
+          @update:selectedYear="selectedYear = $event"
         />
         
         <!-- 对比视图 -->
@@ -83,6 +49,9 @@
           :operators="filteredOperators"
           :selectedMetrics="selectedMetrics"
           :quarterlyData="filteredQuarterlyData"
+          :selectedYear="selectedYear"
+          :availableYears="availableYears"
+          @update:selectedYear="selectedYear = $event"
         />
         
         <!-- 详情视图 -->
@@ -163,21 +132,37 @@ import StockInfo from './components/StockInfo.vue'
 import MacroNews from './components/MacroNews.vue'
 import InvestorLinks from './components/InvestorLinks.vue'
 
-import enhancedData from './data/enhanced-data.json'
+import enhancedDataJson from './data/enhanced-data.json'
 
-// 数据
-const data = ref(enhancedData)
+// 数据 - 直接使用普通对象
+const enhancedData = enhancedDataJson
 
 // 筛选状态
 const selectedOperators = ref([])
 const selectedMetrics = ref(['revenue', 'ebitdaMargin', 'subscriberGrowth', 'arpu', 'capexRatio'])
-const selectedYears = ref([2024, 2025, 2026])
+const selectedYear = ref(2026) // 改为单选，默认最新年份
 const currentView = ref('overview')
 const refreshing = ref(false)
+const sidebarCollapsed = ref(false) // 侧边栏折叠状态
+const currentTime = ref('') // 当前显示时间
+
+// 更新当前时间
+const updateCurrentTime = () => {
+  const now = new Date()
+  const year = now.getFullYear()
+  const month = String(now.getMonth() + 1).padStart(2, '0')
+  const day = String(now.getDate()).padStart(2, '0')
+  const hours = String(now.getHours()).padStart(2, '0')
+  const minutes = String(now.getMinutes()).padStart(2, '0')
+  currentTime.value = `${year}年${month}月${day}日 ${hours}:${minutes} SAST`
+}
+
+// 初始化时间
+updateCurrentTime()
 
 // 初始化选中所有运营商
 onMounted(() => {
-  selectedOperators.value = data.value.operators.map(op => op.id)
+  selectedOperators.value = enhancedData.operators.map(op => op.id)
 })
 
 // 可用指标列表
@@ -194,44 +179,33 @@ const availableMetrics = computed(() => {
   ]
 })
 
-// 可用年份
+// 可用年份 - 只显示有数据的年份
 const availableYears = computed(() => {
-  return [2022, 2023, 2024, 2025, 2026]
+  return [2024, 2025, 2026]
 })
-
-// 切换年份
-const toggleYear = (year) => {
-  const index = selectedYears.value.indexOf(year)
-  if (index > -1) {
-    selectedYears.value.splice(index, 1)
-  } else {
-    selectedYears.value.push(year)
-    selectedYears.value.sort((a, b) => a - b)
-  }
-}
 
 // 筛选后的运营商
 const filteredOperators = computed(() => {
-  return data.value.operators.filter(op => selectedOperators.value.includes(op.id))
+  return enhancedData.operators.filter(op => selectedOperators.value.includes(op.id))
 })
 
-// 筛选后的季度数据
+// 筛选后的季度数据 - 使用单选年份
 const filteredQuarterlyData = computed(() => {
-  return (data.value.quarterlyData || [])
+  return (enhancedData.quarterlyData || [])
     .filter(d => selectedOperators.value.includes(d.operatorId))
     .filter(d => {
       const year = parseInt(d.period.substring(0, 4))
-      return selectedYears.value.includes(year)
+      return year === selectedYear.value
     })
 })
 
 // 获取单个运营商的季度数据
 const getOperatorQuarterlyData = (operatorId) => {
-  return (data.value.quarterlyData || [])
+  return (enhancedData.quarterlyData || [])
     .filter(d => d.operatorId === operatorId)
     .filter(d => {
       const year = parseInt(d.period.substring(0, 4))
-      return selectedYears.value.includes(year)
+      return year === selectedYear.value
     })
 }
 
@@ -239,9 +213,10 @@ const getOperatorQuarterlyData = (operatorId) => {
 const handleRefresh = async () => {
   refreshing.value = true
   // 模拟刷新过程
-  await new Promise(resolve => setTimeout(resolve, 2000))
+  await new Promise(resolve => setTimeout(resolve, 1500))
+  // 更新当前时间
+  updateCurrentTime()
   refreshing.value = false
-  alert('数据刷新完成！')
 }
 
 // 暴露给模板的数据（已在上方定义）
@@ -255,10 +230,11 @@ const handleRefresh = async () => {
 }
 
 body {
-  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
-  background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+  font-family: 'Inter', 'SF Pro Display', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e293b 100%);
   color: #e2e8f0;
   min-height: 100vh;
+  overflow-x: hidden;
 }
 
 .app {
@@ -275,112 +251,46 @@ body {
 
 /* 左侧筛选面板 */
 .filter-panel {
-  width: 300px;
-  background: rgba(15, 23, 42, 0.95);
-  border-right: 1px solid rgba(148, 163, 184, 0.1);
-  padding: 20px;
+  width: 280px;
+  min-width: 280px;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.98) 0%, rgba(30, 41, 59, 0.95) 100%);
+  border-right: 1px solid rgba(99, 102, 241, 0.15);
   overflow-y: auto;
-  backdrop-filter: blur(10px);
+  overflow-x: hidden;
+  backdrop-filter: blur(16px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
 }
 
-/* 年份筛选 */
-.year-filter {
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(148, 163, 184, 0.1);
+.filter-panel.collapsed {
+  width: 0;
+  min-width: 0;
+  border-right: none;
+  box-shadow: none;
 }
 
-.year-filter h3 {
-  font-size: 12px;
-  font-weight: 600;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
+.filter-panel-content {
+  padding: 20px;
+  opacity: 1;
+  transition: opacity 0.2s;
 }
 
-.year-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.filter-panel.collapsed .filter-panel-content {
+  opacity: 0;
+  pointer-events: none;
 }
 
-.year-buttons button {
-  padding: 6px 12px;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 6px;
-  background: rgba(30, 41, 59, 0.5);
-  color: #cbd5e1;
-  font-size: 12px;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.year-buttons button:hover {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.3);
-}
-
-.year-buttons button.active {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-color: #3b82f6;
-  color: white;
-}
-
-/* 视图切换 */
-.view-switcher {
-  margin-top: 24px;
-  padding-top: 24px;
-  border-top: 1px solid rgba(148, 163, 184, 0.1);
-}
-
-.view-switcher h3 {
-  font-size: 12px;
-  font-weight: 600;
-  color: #94a3b8;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 12px;
-}
-
-.view-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.view-buttons button {
-  padding: 12px 16px;
-  border: 1px solid rgba(148, 163, 184, 0.2);
-  border-radius: 8px;
-  background: rgba(30, 41, 59, 0.5);
-  color: #cbd5e1;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  text-align: left;
-}
-
-.view-buttons button:hover {
-  background: rgba(59, 130, 246, 0.1);
-  border-color: rgba(59, 130, 246, 0.3);
-  color: #e2e8f0;
-}
-
-.view-buttons button.active {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  border-color: #3b82f6;
-  color: white;
-  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-}
-
-/* 主内容区 */
+/* 详情视图 */
 .content-area {
   flex: 1;
   padding: 24px;
   overflow-y: auto;
-  background: rgba(15, 23, 42, 0.3);
+  background: linear-gradient(135deg, rgba(15, 23, 42, 0.4) 0%, rgba(30, 41, 59, 0.3) 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.content-area.expanded {
+  padding: 24px 40px;
 }
 
 /* 详情视图 */
@@ -541,8 +451,16 @@ body {
   
   .filter-panel {
     width: 100%;
+    min-width: 100%;
     border-right: none;
-    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+    border-bottom: 1px solid rgba(99, 102, 241, 0.15);
+  }
+  
+  .filter-panel.collapsed {
+    height: 0;
+    min-height: 0;
+    width: 100%;
+    min-width: 100%;
   }
 }
 </style>

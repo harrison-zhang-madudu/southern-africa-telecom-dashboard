@@ -60,7 +60,7 @@ const initChart = () => {
     },
     xAxis: {
       type: 'category',
-      data: props.data.map(d => d.quarter),
+      data: props.data.map(d => d.periodLabel || d.period),
       axisLine: {
         lineStyle: {
           color: 'rgba(148, 163, 184, 0.2)'

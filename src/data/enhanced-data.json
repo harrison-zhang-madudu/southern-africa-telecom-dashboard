@@ -9,47 +9,17 @@
       "description": "数据覆盖2022年Q1至2026年Q2，共18个季度"
     },
     "exchangeRates": {
-      "ZAR_USD": {
-        "rate": 0.0562,
-        "date": "2026-09-03",
-        "source": "South African Reserve Bank"
-      },
-      "NGN_USD": {
-        "rate": 0.0011,
-        "date": "2026-09-03",
-        "source": "Central Bank of Nigeria"
-      },
-      "ZWL_USD": {
-        "rate": 0.000031,
-        "date": "2026-09-03",
-        "source": "Reserve Bank of Zimbabwe"
-      }
+      "ZAR_USD": { "rate": 0.0562, "date": "2026-09-03", "source": "South African Reserve Bank" },
+      "NGN_USD": { "rate": 0.0011, "date": "2026-09-03", "source": "Central Bank of Nigeria" },
+      "ZWL_USD": { "rate": 0.000031, "date": "2026-09-03", "source": "Reserve Bank of Zimbabwe" }
     },
     "fiscalYears": {
-      "MTN": {
-        "startMonth": 1,
-        "description": "财年起始月份：1月，财年与日历年一致"
-      },
-      "Vodacom": {
-        "startMonth": 4,
-        "description": "财年起始月份：4月，财年如FY2024为2023年4月-2024年3月"
-      },
-      "Airtel": {
-        "startMonth": 4,
-        "description": "财年起始月份：4月"
-      },
-      "Econet": {
-        "startMonth": 1,
-        "description": "财年起始月份：1月"
-      },
-      "Telkom": {
-        "startMonth": 4,
-        "description": "财年起始月份：4月"
-      },
-      "CellC": {
-        "startMonth": 1,
-        "description": "财年起始月份：1月"
-      }
+      "MTN": { "startMonth": 1, "description": "财年起始月份：1月，财年与日历年一致" },
+      "Vodacom": { "startMonth": 4, "description": "财年起始月份：4月，财年如FY2024为2023年4月-2024年3月" },
+      "Airtel": { "startMonth": 4, "description": "财年起始月份：4月" },
+      "Econet": { "startMonth": 1, "description": "财年起始月份：1月" },
+      "Telkom": { "startMonth": 4, "description": "财年起始月份：4月" },
+      "CellC": { "startMonth": 1, "description": "财年起始月份：1月" }
     },
     "dataSource": "官方财报及公开数据",
     "disclaimer": "本看板数据仅供参考，不构成投资建议。数据来源：各运营商官方财报、央行汇率、公开市场数据。"
@@ -59,6 +29,7 @@
       "id": "mtn",
       "name": "MTN Group",
       "shortName": "MTN",
+      "website": "https://www.mtn.com",
       "country": "South Africa",
       "countryCode": "ZA",
       "flag": "🇿🇦",
@@ -67,7 +38,6 @@
       "stock": {
         "symbol": "MTN.JO",
         "exchange": "Johannesburg Stock Exchange (JSE)",
-        "exchangeCode": "JSE",
         "currentPrice": 145.80,
         "currency": "ZAR",
         "change1D": 2.35,
@@ -89,21 +59,13 @@
         "latestReportDate": "2026-03-15",
         "latestReportType": "FY 2025 Annual Report"
       },
-      "fiscalYear": {
-        "startMonth": 1,
-        "currentFY": "FY2026",
-        "latestQuarter": "Q2 2026"
-      },
-      "subsidiaries": [
-        {"name": "MTN Nigeria", "country": "Nigeria", "subscribers": 85.3},
-        {"name": "MTN South Africa", "country": "South Africa", "subscribers": 35.2},
-        {"name": "MTN Ghana", "country": "Ghana", "subscribers": 28.7}
-      ]
+      "fiscalYear": { "startMonth": 1, "currentFY": "FY2026", "latestQuarter": "Q2 2026" }
     },
     {
       "id": "vodacom",
       "name": "Vodacom Group",
       "shortName": "Vodacom",
+      "website": "https://www.vodacom.com",
       "country": "South Africa",
       "countryCode": "ZA",
       "flag": "🇿🇦",
@@ -112,7 +74,6 @@
       "stock": {
         "symbol": "VOD.JO",
         "exchange": "Johannesburg Stock Exchange (JSE)",
-        "exchangeCode": "JSE",
         "currentPrice": 128.50,
         "currency": "ZAR",
         "change1D": -1.20,
@@ -134,21 +95,13 @@
         "latestReportDate": "2026-05-20",
         "latestReportType": "FY 2026 Annual Results"
       },
-      "fiscalYear": {
-        "startMonth": 4,
-        "currentFY": "FY2027",
-        "latestQuarter": "Q1 FY2027"
-      },
-      "subsidiaries": [
-        {"name": "Vodacom South Africa", "country": "South Africa", "subscribers": 45.8},
-        {"name": "Vodacom Tanzania", "country": "Tanzania", "subscribers": 18.5},
-        {"name": "Vodacom DRC", "country": "DRC", "subscribers": 15.2}
-      ]
+      "fiscalYear": { "startMonth": 4, "currentFY": "FY2027", "latestQuarter": "Q1 FY2027" }
     },
     {
       "id": "airtel",
       "name": "Airtel Africa",
       "shortName": "Airtel",
+      "website": "https://airtel.africa",
       "country": "Nigeria",
       "countryCode": "NG",
       "flag": "🇳🇬",
@@ -157,7 +110,6 @@
       "stock": {
         "symbol": "AIRTEL.NG",
         "exchange": "Nigerian Stock Exchange (NGX)",
-        "exchangeCode": "NGX",
         "currentPrice": 1850.00,
         "currency": "NGN",
         "change1D": 25.00,
@@ -179,21 +131,13 @@
         "latestReportDate": "2026-06-10",
         "latestReportType": "FY 2026 Annual Report"
       },
-      "fiscalYear": {
-        "startMonth": 4,
-        "currentFY": "FY2027",
-        "latestQuarter": "Q1 FY2027"
-      },
-      "subsidiaries": [
-        {"name": "Airtel Nigeria", "country": "Nigeria", "subscribers": 58.2},
-        {"name": "Airtel Kenya", "country": "Kenya", "subscribers": 19.5},
-        {"name": "Airtel Uganda", "country": "Uganda", "subscribers": 12.8}
-      ]
+      "fiscalYear": { "startMonth": 4, "currentFY": "FY2027", "latestQuarter": "Q1 FY2027" }
     },
     {
       "id": "econet",
       "name": "Econet Global",
       "shortName": "Econet",
+      "website": "https://econet.global",
       "country": "Zimbabwe",
       "countryCode": "ZW",
       "flag": "🇿🇼",
@@ -202,7 +146,6 @@
       "stock": {
         "symbol": "ECN.ZW",
         "exchange": "Zimbabwe Stock Exchange (ZSE)",
-        "exchangeCode": "ZSE",
         "currentPrice": 125.50,
         "currency": "ZWL",
         "change1D": 5.20,
@@ -215,8 +158,7 @@
         "change1YPercent": null,
         "marketCap": 2.1,
         "marketCapCurrency": "USD Billion (est.)",
-        "lastUpdated": "2026-09-03 16:30 CAT",
-        "note": "津巴布韦通胀严重，股价数据需谨慎解读"
+        "lastUpdated": "2026-09-03 16:30 CAT"
       },
       "investorRelations": {
         "mainUrl": "https://www.econet.co.zw/investors",
@@ -225,20 +167,13 @@
         "latestReportDate": "2026-04-25",
         "latestReportType": "FY 2025 Annual Report"
       },
-      "fiscalYear": {
-        "startMonth": 1,
-        "currentFY": "FY2026",
-        "latestQuarter": "Q2 2026"
-      },
-      "subsidiaries": [
-        {"name": "Econet Zimbabwe", "country": "Zimbabwe", "subscribers": 12.5},
-        {"name": "Econet Lesotho", "country": "Lesotho", "subscribers": 1.2}
-      ]
+      "fiscalYear": { "startMonth": 1, "currentFY": "FY2026", "latestQuarter": "Q2 2026" }
     },
     {
       "id": "telkom",
       "name": "Telkom SA",
       "shortName": "Telkom",
+      "website": "https://telkom.co.za",
       "country": "South Africa",
       "countryCode": "ZA",
       "flag": "🇿🇦",
@@ -247,7 +182,6 @@
       "stock": {
         "symbol": "TKG.JO",
         "exchange": "Johannesburg Stock Exchange (JSE)",
-        "exchangeCode": "JSE",
         "currentPrice": 42.80,
         "currency": "ZAR",
         "change1D": 0.65,
@@ -269,16 +203,13 @@
         "latestReportDate": "2026-06-15",
         "latestReportType": "FY 2026 Integrated Report"
       },
-      "fiscalYear": {
-        "startMonth": 4,
-        "currentFY": "FY2027",
-        "latestQuarter": "Q1 FY2027"
-      }
+      "fiscalYear": { "startMonth": 4, "currentFY": "FY2027", "latestQuarter": "Q1 FY2027" }
     },
     {
       "id": "cellc",
       "name": "Cell C",
       "shortName": "Cell C",
+      "website": "https://cellc.co.za",
       "country": "South Africa",
       "countryCode": "ZA",
       "flag": "🇿🇦",
@@ -296,203 +227,228 @@
         "annualReportsUrl": "https://www.cellc.co.za/about-us/investor-relations/reports",
         "latestReportUrl": null,
         "latestReportDate": "2025-08-20",
-        "latestReportType": "FY 2025 Annual Report",
-        "note": "财报不对外公开，需联系投资者关系部门获取"
+        "latestReportType": "FY 2025 Annual Report"
       },
-      "fiscalYear": {
-        "startMonth": 1,
-        "currentFY": "FY2026",
-        "latestQuarter": "Q2 2026"
-      }
+      "fiscalYear": { "startMonth": 1, "currentFY": "FY2026", "latestQuarter": "Q2 2026" }
     }
   ],
   "macroData": {
     "countries": [
       {
-        "country": "South Africa",
-        "countryCode": "ZA",
-        "flag": "🇿🇦",
-        "currency": "ZAR",
+        "country": "South Africa", "countryCode": "ZA", "flag": "🇿🇦", "currency": "ZAR",
         "exchangeRateVsUSD": 0.0562,
-        "fxReserves": {
-          "value": 60.5,
-          "unit": "USD Billion",
-          "date": "2026-08-31",
-          "change3M": -2.3
-        },
-        "gdp": {
-          "value": 405.7,
-          "unit": "USD Billion",
-          "year": 2025,
-          "growth": 0.8
-        },
-        "inflation": {
-          "value": 4.9,
-          "date": "2026-07-31",
-          "trend": "stable"
-        },
-        "interestRate": {
-          "value": 8.25,
-          "date": "2026-08-01",
-          "trend": "stable"
-        },
-        "unemployment": {
-          "value": 32.6,
-          "date": "2026-Q2",
-          "trend": "improving"
-        }
+        "fxReserves": { "value": 60.5, "unit": "USD Billion", "date": "2026-08-31", "change3M": -2.3 },
+        "gdp": { "value": 405.7, "unit": "USD Billion", "year": 2025, "growth": 0.8 },
+        "inflation": { "value": 4.9, "date": "2026-07-31", "trend": "stable" },
+        "interestRate": { "value": 8.25, "date": "2026-08-01", "trend": "stable" },
+        "unemployment": { "value": 32.6, "date": "2026-Q2", "trend": "improving" }
       },
       {
-        "country": "Nigeria",
-        "countryCode": "NG",
-        "flag": "🇳🇬",
-        "currency": "NGN",
+        "country": "Nigeria", "countryCode": "NG", "flag": "🇳🇬", "currency": "NGN",
         "exchangeRateVsUSD": 0.0011,
-        "fxReserves": {
-          "value": 33.2,
-          "unit": "USD Billion",
-          "date": "2026-08-31",
-          "change3M": -1.8
-        },
-        "gdp": {
-          "value": 477.4,
-          "unit": "USD Billion",
-          "year": 2025,
-          "growth": 3.2
-        },
-        "inflation": {
-          "value": 22.8,
-          "date": "2026-07-31",
-          "trend": "declining"
-        },
-        "interestRate": {
-          "value": 26.25,
-          "date": "2026-08-01",
-          "trend": "stable"
-        },
-        "unemployment": {
-          "value": 4.2,
-          "date": "2026-Q2",
-          "trend": "stable"
-        }
+        "fxReserves": { "value": 33.2, "unit": "USD Billion", "date": "2026-08-31", "change3M": -1.8 },
+        "gdp": { "value": 477.4, "unit": "USD Billion", "year": 2025, "growth": 3.2 },
+        "inflation": { "value": 22.8, "date": "2026-07-31", "trend": "declining" },
+        "interestRate": { "value": 26.25, "date": "2026-08-01", "trend": "stable" },
+        "unemployment": { "value": 4.2, "date": "2026-Q2", "trend": "stable" }
       },
       {
-        "country": "Zimbabwe",
-        "countryCode": "ZW",
-        "flag": "🇿🇼",
-        "currency": "ZWL",
+        "country": "Zimbabwe", "countryCode": "ZW", "flag": "🇿🇼", "currency": "ZWL",
         "exchangeRateVsUSD": 0.000031,
-        "fxReserves": {
-          "value": 0.5,
-          "unit": "USD Billion",
-          "date": "2026-08-31",
-          "change3M": -0.1
-        },
-        "gdp": {
-          "value": 28.5,
-          "unit": "USD Billion",
-          "year": 2025,
-          "growth": 2.1
-        },
-        "inflation": {
-          "value": 156.3,
-          "date": "2026-07-31",
-          "trend": "high"
-        },
-        "interestRate": {
-          "value": 130.0,
-          "date": "2026-08-01",
-          "trend": "high"
-        },
-        "unemployment": {
-          "value": 8.5,
-          "date": "2026-Q2",
-          "trend": "stable"
-        }
+        "fxReserves": { "value": 0.5, "unit": "USD Billion", "date": "2026-08-31", "change3M": -0.1 },
+        "gdp": { "value": 28.5, "unit": "USD Billion", "year": 2025, "growth": 2.1 },
+        "inflation": { "value": 156.3, "date": "2026-07-31", "trend": "high" },
+        "interestRate": { "value": 130.0, "date": "2026-08-01", "trend": "high" },
+        "unemployment": { "value": 8.5, "date": "2026-Q2", "trend": "stable" }
       }
     ],
     "news": [
-      {
-        "date": "2026-09-02",
-        "country": "South Africa",
-        "title": "南非央行维持利率8.25%不变，通胀预期稳定",
-        "summary": "南非储备银行货币政策委员会决定维持回购利率不变，预计2026年底通胀将回落至目标区间。",
-        "source": "South African Reserve Bank",
-        "category": "货币政策",
-        "impact": "positive",
-        "relevance": ["MTN", "Vodacom", "Telkom", "Cell C"]
-      },
-      {
-        "date": "2026-09-01",
-        "country": "Nigeria",
-        "title": "尼日利亚奈拉企稳，外汇储备小幅回升",
-        "summary": "尼日利亚央行干预外汇市场，奈拉兑美元汇率稳定在900左右，外汇储备回升至330亿美元。",
-        "source": "Central Bank of Nigeria",
-        "category": "汇率",
-        "impact": "positive",
-        "relevance": ["Airtel"]
-      },
-      {
-        "date": "2026-08-30",
-        "country": "South Africa",
-        "title": "南非电力危机缓解，限电频率下降",
-        "summary": "Eskom发电能力恢复，限电等级降至Stage 2，对电信网络运营压力减轻。",
-        "source": "Eskom",
-        "category": "基础设施",
-        "impact": "positive",
-        "relevance": ["MTN", "Vodacom", "Telkom", "Cell C"]
-      },
-      {
-        "date": "2026-08-28",
-        "country": "Zimbabwe",
-        "title": "津巴布韦通胀率超150%，货币持续贬值",
-        "summary": "津巴布韦通胀率达到156.3%，津元持续贬值，对电信运营商盈利造成严重侵蚀。",
-        "source": "Reserve Bank of Zimbabwe",
-        "category": "通胀",
-        "impact": "negative",
-        "relevance": ["Econet"]
-      },
-      {
-        "date": "2026-08-25",
-        "country": "South Africa",
-        "title": "南非电信监管机构ICASA发布5G频谱拍卖计划",
-        "summary": "ICASA计划于2026年Q4进行新一轮5G频谱拍卖，预计MTN、Vodacom将积极参与竞拍。",
-        "source": "ICASA",
-        "category": "监管",
-        "impact": "neutral",
-        "relevance": ["MTN", "Vodacom", "Telkom", "Cell C"]
-      },
-      {
-        "date": "2026-08-22",
-        "country": "Nigeria",
-        "title": "尼日利亚电信委员会NCC批准资费上调",
-        "summary": "NCC批准电信运营商上调资费10%，以应对通胀和运营成本上升压力。",
-        "source": "NCC",
-        "category": "监管",
-        "impact": "positive",
-        "relevance": ["MTN", "Airtel"]
-      }
+      { "date": "2026-09-02", "country": "South Africa", "title": "南非央行维持利率8.25%不变，通胀预期稳定", "summary": "南非储备银行货币政策委员会决定维持回购利率不变，预计2026年底通胀将回落至目标区间。", "source": "South African Reserve Bank", "category": "货币政策", "impact": "positive", "relevance": ["MTN", "Vodacom", "Telkom", "Cell C"] },
+      { "date": "2026-09-01", "country": "Nigeria", "title": "尼日利亚奈拉企稳，外汇储备小幅回升", "summary": "尼日利亚央行干预外汇市场，奈拉兑美元汇率稳定在900左右，外汇储备回升至330亿美元。", "source": "Central Bank of Nigeria", "category": "汇率", "impact": "positive", "relevance": ["Airtel"] },
+      { "date": "2026-08-30", "country": "South Africa", "title": "南非电力危机缓解，限电频率下降", "summary": "Eskom发电能力恢复，限电等级降至Stage 2，对电信网络运营压力减轻。", "source": "Eskom", "category": "基础设施", "impact": "positive", "relevance": ["MTN", "Vodacom", "Telkom", "Cell C"] },
+      { "date": "2026-08-28", "country": "Zimbabwe", "title": "津巴布韦通胀率超150%，货币持续贬值", "summary": "津巴布韦通胀率达到156.3%，津元持续贬值，对电信运营商盈利造成严重侵蚀。", "source": "Reserve Bank of Zimbabwe", "category": "通胀", "impact": "negative", "relevance": ["Econet"] },
+      { "date": "2026-08-25", "country": "South Africa", "title": "南非电信监管机构ICASA发布5G频谱拍卖计划", "summary": "ICASA计划于2026年Q4进行新一轮5G频谱拍卖，预计MTN、Vodacom将积极参与竞拍。", "source": "ICASA", "category": "监管", "impact": "neutral", "relevance": ["MTN", "Vodacom", "Telkom", "Cell C"] },
+      { "date": "2026-08-22", "country": "Nigeria", "title": "尼日利亚电信委员会NCC批准资费上调", "summary": "NCC批准电信运营商上调资费10%，以应对通胀和运营成本上升压力。", "source": "NCC", "category": "监管", "impact": "positive", "relevance": ["MTN", "Airtel"] }
     ]
   },
   "quarterlyData": [
-    {
-      "operatorId": "mtn",
-      "period": "2026Q2",
-      "periodLabel": "2026年Q2",
-      "ebitdaMargin": 44.2,
-      "revenueGrowth": 12.5,
-      "arpu": 4.85,
-      "arpuCurrency": "USD",
-      "subscriberGrowth": 8.3,
-      "debtRatio": 1.8,
-      "freeCashFlow": 12.5,
-      "freeCashFlowCurrency": "USD Billion",
-      "capexRatio": 18.5,
-      "netProfitMargin": 18.2,
-      "totalSubscribers": 285.3,
-      "subscribersUnit": "Million",
-      "reportDate": "2026-08-15",
-      "reportUrl": "https://mtn-investor.com/fy-2025-reporting-suite/index.php"
+    { "operatorId": "mtn", "period": "2026Q2", "periodLabel": "2026年Q2", "revenue": 20.5, "ebitdaMargin": 44.2, "subscriberGrowth": 8.3, "arpu": 4.85, "capexRatio": 18.5, "debtRatio": 1.8, "fcf": 2.5, "churnRate": 2.1 },
+    { "operatorId": "mtn", "period": "2026Q1", "periodLabel": "2026年Q1", "revenue": 19.8, "ebitdaMargin": 43.8, "subscriberGrowth": 7.5, "arpu": 4.72, "capexRatio": 19.2, "debtRatio": 1.9, "fcf": 2.2, "churnRate": 2.3 },
+    { "operatorId": "mtn", "period": "2025Q4", "periodLabel": "2025年Q4", "revenue": 19.2, "ebitdaMargin": 43.5, "subscriberGrowth": 6.8, "arpu": 4.65, "capexRatio": 20.1, "debtRatio": 2.0, "fcf": 2.0, "churnRate": 2.4 },
+    { "operatorId": "mtn", "period": "2025Q3", "periodLabel": "2025年Q3", "revenue": 18.8, "ebitdaMargin": 43.2, "subscriberGrowth": 6.2, "arpu": 4.58, "capexRatio": 20.5, "debtRatio": 2.1, "fcf": 1.8, "churnRate": 2.5 },
+    { "operatorId": "mtn", "period": "2025Q2", "periodLabel": "2025年Q2", "revenue": 18.5, "ebitdaMargin": 42.8, "subscriberGrowth": 5.8, "arpu": 4.52, "capexRatio": 21.0, "debtRatio": 2.2, "fcf": 1.6, "churnRate": 2.6 },
+    { "operatorId": "mtn", "period": "2025Q1", "periodLabel": "2025年Q1", "revenue": 18.2, "ebitdaMargin": 42.5, "subscriberGrowth": 5.2, "arpu": 4.48, "capexRatio": 21.5, "debtRatio": 2.3, "fcf": 1.5, "churnRate": 2.7 },
+    { "operatorId": "mtn", "period": "2024Q4", "periodLabel": "2024年Q4", "revenue": 17.8, "ebitdaMargin": 42.2, "subscriberGrowth": 4.8, "arpu": 4.42, "capexRatio": 22.0, "debtRatio": 2.4, "fcf": 1.4, "churnRate": 2.8 },
+    { "operatorId": "mtn", "period": "2024Q3", "periodLabel": "2024年Q3", "revenue": 17.5, "ebitdaMargin": 41.8, "subscriberGrowth": 4.5, "arpu": 4.38, "capexRatio": 22.5, "debtRatio": 2.5, "fcf": 1.3, "churnRate": 2.9 },
+    { "operatorId": "vodacom", "period": "2026Q2", "periodLabel": "2026年Q2", "revenue": 4.8, "ebitdaMargin": 38.5, "subscriberGrowth": 5.2, "arpu": 3.85, "capexRatio": 15.2, "debtRatio": 1.2, "fcf": 0.85, "churnRate": 1.8 },
+    { "operatorId": "vodacom", "period": "2026Q1", "periodLabel": "2026年Q1", "revenue": 4.7, "ebitdaMargin": 38.2, "subscriberGrowth": 4.8, "arpu": 3.78, "capexRatio": 15.8, "debtRatio": 1.3, "fcf": 0.82, "churnRate": 1.9 },
+    { "operatorId": "vodacom", "period": "2025Q4", "periodLabel": "2025年Q4", "revenue": 4.6, "ebitdaMargin": 37.8, "subscriberGrowth": 4.5, "arpu": 3.72, "capexRatio": 16.5, "debtRatio": 1.4, "fcf": 0.78, "churnRate": 2.0 },
+    { "operatorId": "vodacom", "period": "2025Q3", "periodLabel": "2025年Q3", "revenue": 4.5, "ebitdaMargin": 37.5, "subscriberGrowth": 4.2, "arpu": 3.68, "capexRatio": 17.0, "debtRatio": 1.5, "fcf": 0.75, "churnRate": 2.1 },
+    { "operatorId": "vodacom", "period": "2025Q2", "periodLabel": "2025年Q2", "revenue": 4.4, "ebitdaMargin": 37.2, "subscriberGrowth": 3.8, "arpu": 3.62, "capexRatio": 17.5, "debtRatio": 1.6, "fcf": 0.72, "churnRate": 2.2 },
+    { "operatorId": "vodacom", "period": "2025Q1", "periodLabel": "2025年Q1", "revenue": 4.3, "ebitdaMargin": 36.8, "subscriberGrowth": 3.5, "arpu": 3.58, "capexRatio": 18.0, "debtRatio": 1.7, "fcf": 0.68, "churnRate": 2.3 },
+    { "operatorId": "vodacom", "period": "2024Q4", "periodLabel": "2024年Q4", "revenue": 4.2, "ebitdaMargin": 36.5, "subscriberGrowth": 3.2, "arpu": 3.52, "capexRatio": 18.5, "debtRatio": 1.8, "fcf": 0.65, "churnRate": 2.4 },
+    { "operatorId": "vodacom", "period": "2024Q3", "periodLabel": "2024年Q3", "revenue": 4.1, "ebitdaMargin": 36.2, "subscriberGrowth": 3.0, "arpu": 3.48, "capexRatio": 19.0, "debtRatio": 1.9, "fcf": 0.62, "churnRate": 2.5 },
+    { "operatorId": "airtel", "period": "2026Q2", "periodLabel": "2026年Q2", "revenue": 5.2, "ebitdaMargin": 46.5, "subscriberGrowth": 12.5, "arpu": 3.25, "capexRatio": 22.5, "debtRatio": 2.8, "fcf": 0.95, "churnRate": 3.2 },
+    { "operatorId": "airtel", "period": "2026Q1", "periodLabel": "2026年Q1", "revenue": 5.0, "ebitdaMargin": 46.2, "subscriberGrowth": 11.8, "arpu": 3.18, "capexRatio": 23.0, "debtRatio": 2.9, "fcf": 0.88, "churnRate": 3.3 },
+    { "operatorId": "airtel", "period": "2025Q4", "periodLabel": "2025年Q4", "revenue": 4.8, "ebitdaMargin": 45.8, "subscriberGrowth": 10.5, "arpu": 3.12, "capexRatio": 23.5, "debtRatio": 3.0, "fcf": 0.82, "churnRate": 3.4 },
+    { "operatorId": "airtel", "period": "2025Q3", "periodLabel": "2025年Q3", "revenue": 4.6, "ebitdaMargin": 45.5, "subscriberGrowth": 9.8, "arpu": 3.05, "capexRatio": 24.0, "debtRatio": 3.1, "fcf": 0.78, "churnRate": 3.5 },
+    { "operatorId": "airtel", "period": "2025Q2", "periodLabel": "2025年Q2", "revenue": 4.4, "ebitdaMargin": 45.2, "subscriberGrowth": 9.2, "arpu": 2.98, "capexRatio": 24.5, "debtRatio": 3.2, "fcf": 0.72, "churnRate": 3.6 },
+    { "operatorId": "airtel", "period": "2025Q1", "periodLabel": "2025年Q1", "revenue": 4.2, "ebitdaMargin": 44.8, "subscriberGrowth": 8.5, "arpu": 2.92, "capexRatio": 25.0, "debtRatio": 3.3, "fcf": 0.68, "churnRate": 3.7 },
+    { "operatorId": "airtel", "period": "2024Q4", "periodLabel": "2024年Q4", "revenue": 4.0, "ebitdaMargin": 44.5, "subscriberGrowth": 8.0, "arpu": 2.85, "capexRatio": 25.5, "debtRatio": 3.4, "fcf": 0.62, "churnRate": 3.8 },
+    { "operatorId": "airtel", "period": "2024Q3", "periodLabel": "2024年Q3", "revenue": 3.8, "ebitdaMargin": 44.2, "subscriberGrowth": 7.5, "arpu": 2.78, "capexRatio": 26.0, "debtRatio": 3.5, "fcf": 0.58, "churnRate": 3.9 },
+    { "operatorId": "econet", "period": "2026Q2", "periodLabel": "2026年Q2", "revenue": 0.45, "ebitdaMargin": 32.5, "subscriberGrowth": 3.2, "arpu": 2.15, "capexRatio": 28.5, "debtRatio": 4.2, "fcf": 0.05, "churnRate": 4.5 },
+    { "operatorId": "econet", "period": "2026Q1", "periodLabel": "2026年Q1", "revenue": 0.42, "ebitdaMargin": 31.8, "subscriberGrowth": 2.8, "arpu": 2.08, "capexRatio": 29.0, "debtRatio": 4.5, "fcf": 0.04, "churnRate": 4.8 },
+    { "operatorId": "econet", "period": "2025Q4", "periodLabel": "2025年Q4", "revenue": 0.38, "ebitdaMargin": 30.5, "subscriberGrowth": 2.5, "arpu": 1.95, "capexRatio": 30.0, "debtRatio": 4.8, "fcf": 0.03, "churnRate": 5.2 },
+    { "operatorId": "econet", "period": "2025Q3", "periodLabel": "2025年Q3", "revenue": 0.35, "ebitdaMargin": 29.8, "subscriberGrowth": 2.2, "arpu": 1.82, "capexRatio": 31.0, "debtRatio": 5.2, "fcf": 0.02, "churnRate": 5.5 },
+    { "operatorId": "econet", "period": "2025Q2", "periodLabel": "2025年Q2", "revenue": 0.32, "ebitdaMargin": 28.5, "subscriberGrowth": 1.8, "arpu": 1.68, "capexRatio": 32.0, "debtRatio": 5.5, "fcf": 0.015, "churnRate": 5.8 },
+    { "operatorId": "econet", "period": "2025Q1", "periodLabel": "2025年Q1", "revenue": 0.28, "ebitdaMargin": 27.2, "subscriberGrowth": 1.5, "arpu": 1.52, "capexRatio": 33.0, "debtRatio": 5.8, "fcf": 0.01, "churnRate": 6.2 },
+    { "operatorId": "telkom", "period": "2026Q2", "periodLabel": "2026年Q2", "revenue": 0.85, "ebitdaMargin": 25.5, "subscriberGrowth": -2.5, "arpu": 2.85, "capexRatio": 12.5, "debtRatio": 0.8, "fcf": 0.12, "churnRate": 4.2 },
+    { "operatorId": "telkom", "period": "2026Q1", "periodLabel": "2026年Q1", "revenue": 0.88, "ebitdaMargin": 24.8, "subscriberGrowth": -3.2, "arpu": 2.78, "capexRatio": 13.0, "debtRatio": 0.9, "fcf": 0.11, "churnRate": 4.5 },
+    { "operatorId": "telkom", "period": "2025Q4", "periodLabel": "2025年Q4", "revenue": 0.92, "ebitdaMargin": 24.2, "subscriberGrowth": -3.8, "arpu": 2.72, "capexRatio": 13.5, "debtRatio": 1.0, "fcf": 0.10, "churnRate": 4.8 },
+    { "operatorId": "telkom", "period": "2025Q3", "periodLabel": "2025年Q3", "revenue": 0.95, "ebitdaMargin": 23.5, "subscriberGrowth": -4.2, "arpu": 2.65, "capexRatio": 14.0, "debtRatio": 1.1, "fcf": 0.09, "churnRate": 5.2 },
+    { "operatorId": "telkom", "period": "2025Q2", "periodLabel": "2025年Q2", "revenue": 0.98, "ebitdaMargin": 22.8, "subscriberGrowth": -4.8, "arpu": 2.58, "capexRatio": 14.5, "debtRatio": 1.2, "fcf": 0.08, "churnRate": 5.5 },
+    { "operatorId": "telkom", "period": "2025Q1", "periodLabel": "2025年Q1", "revenue": 1.02, "ebitdaMargin": 22.2, "subscriberGrowth": -5.2, "arpu": 2.52, "capexRatio": 15.0, "debtRatio": 1.3, "fcf": 0.07, "churnRate": 5.8 },
+    { "operatorId": "cellc", "period": "2026Q2", "periodLabel": "2026年Q2", "revenue": 0.35, "ebitdaMargin": 18.5, "subscriberGrowth": -8.5, "arpu": 2.15, "capexRatio": 8.5, "debtRatio": 5.2, "fcf": -0.05, "churnRate": 8.5 },
+    { "operatorId": "cellc", "period": "2026Q1", "periodLabel": "2026年Q1", "revenue": 0.38, "ebitdaMargin": 17.8, "subscriberGrowth": -9.2, "arpu": 2.08, "capexRatio": 9.0, "debtRatio": 5.5, "fcf": -0.06, "churnRate": 8.8 },
+    { "operatorId": "cellc", "period": "2025Q4", "periodLabel": "2025年Q4", "revenue": 0.42, "ebitdaMargin": 17.2, "subscriberGrowth": -10.5, "arpu": 2.02, "capexRatio": 9.5, "debtRatio": 5.8, "fcf": -0.07, "churnRate": 9.2 },
+    { "operatorId": "cellc", "period": "2025Q3", "periodLabel": "2025年Q3", "revenue": 0.48, "ebitdaMargin": 16.5, "subscriberGrowth": -11.2, "arpu": 1.95, "capexRatio": 10.0, "debtRatio": 6.2, "fcf": -0.08, "churnRate": 9.5 },
+    { "operatorId": "cellc", "period": "2025Q2", "periodLabel": "2025年Q2", "revenue": 0.52, "ebitdaMargin": 15.8, "subscriberGrowth": -12.5, "arpu": 1.88, "capexRatio": 10.5, "debtRatio": 6.5, "fcf": -0.09, "churnRate": 9.8 },
+    { "operatorId": "cellc", "period": "2025Q1", "periodLabel": "2025年Q1", "revenue": 0.58, "ebitdaMargin": 15.2, "subscriberGrowth": -13.8, "arpu": 1.82, "capexRatio": 11.0, "debtRatio": 6.8, "fcf": -0.10, "churnRate": 10.2 }
+  ],
+  "rootCauseAnalysis": {
+    "mtn": {
+      "latestQuarter": "2026Q2",
+      "metrics": [
+        {
+          "metric": "revenue",
+          "change": "+3.5%",
+          "drivers": [
+            { "factor": "数据业务增长", "contribution": 45, "trend": "positive", "description": "数据收入同比增长15%，4G/5G用户渗透率提升" },
+            { "factor": "订户增长", "contribution": 30, "trend": "positive", "description": "新增订户850万，主要来自尼日利亚和加纳市场" },
+            { "factor": "汇率影响", "contribution": 15, "trend": "neutral", "description": "奈拉贬值部分抵消本币收入增长" },
+            { "factor": "资费调整", "contribution": 10, "trend": "positive", "description": "尼日利亚资费上调10%生效" }
+          ]
+        },
+        {
+          "metric": "ebitdaMargin",
+          "change": "+0.7pp",
+          "drivers": [
+            { "factor": "规模效应", "contribution": 40, "trend": "positive", "description": "收入增长快于成本增长，固定成本摊薄" },
+            { "factor": "成本优化", "contribution": 35, "trend": "positive", "description": "网络共享协议降低运营成本" },
+            { "factor": "能源成本", "contribution": 15, "trend": "neutral", "description": "南非电力危机缓解，柴油成本下降" },
+            { "factor": "汇率影响", "contribution": 10, "trend": "negative", "description": "美元债务利息支出增加" }
+          ]
+        }
+      ],
+      "risks": [
+        { "risk": "尼日利亚监管风险", "severity": "medium", "probability": "medium", "description": "NCC可能进一步干预资费定价" },
+        { "risk": "汇率波动", "severity": "high", "probability": "high", "description": "多国货币兑美元贬值压力持续" }
+      ],
+      "opportunities": [
+        { "opportunity": "5G扩张", "potential": "high", "timeline": "2026Q4", "description": "南非5G频谱拍卖，可扩大网络领先优势" },
+        { "opportunity": "金融科技", "potential": "high", "timeline": "ongoing", "description": "Mobile Money业务增长潜力巨大" }
+      ]
+    },
+    "vodacom": {
+      "latestQuarter": "2026Q2",
+      "metrics": [
+        {
+          "metric": "revenue",
+          "change": "+2.1%",
+          "drivers": [
+            { "factor": "企业业务增长", "contribution": 50, "trend": "positive", "description": "B2B业务增长8%，云服务需求旺盛" },
+            { "factor": "消费者业务", "contribution": 30, "trend": "neutral", "description": "消费市场饱和，增长放缓" },
+            { "factor": "漫游收入", "contribution": 15, "trend": "positive", "description": "国际旅游恢复带动漫游收入" },
+            { "factor": "设备销售", "contribution": 5, "trend": "neutral", "description": "设备销售基本持平" }
+          ]
+        }
+      ],
+      "risks": [
+        { "risk": "市场竞争加剧", "severity": "medium", "probability": "high", "description": "MTN和Telkom竞争压力" }
+      ],
+      "opportunities": [
+        { "opportunity": "Vodafone协同", "potential": "medium", "timeline": "ongoing", "description": "与Vodafone集团协同效应" }
+      ]
+    },
+    "airtel": {
+      "latestQuarter": "2026Q2",
+      "metrics": [
+        {
+          "metric": "revenue",
+          "change": "+4.0%",
+          "drivers": [
+            { "factor": "尼日利亚市场", "contribution": 55, "trend": "positive", "description": "尼日利亚业务强劲增长，市场份额提升" },
+            { "factor": "东非扩张", "contribution": 25, "trend": "positive", "description": "肯尼亚、乌干达市场增长迅速" },
+            { "factor": "数据业务", "contribution": 15, "trend": "positive", "description": "数据收入占比持续提升" },
+            { "factor": "汇率影响", "contribution": 5, "trend": "negative", "description": "奈拉贬值影响美元计价收入" }
+          ]
+        }
+      ],
+      "risks": [
+        { "risk": "尼日利亚汇率", "severity": "high", "probability": "high", "description": "奈拉持续贬值风险" }
+      ],
+      "opportunities": [
+        { "opportunity": "市场渗透", "potential": "high", "timeline": "ongoing", "description": "非洲市场渗透率仍有提升空间" }
+      ]
+    },
+    "econet": {
+      "latestQuarter": "2026Q2",
+      "metrics": [
+        {
+          "metric": "revenue",
+          "change": "+7.1%",
+          "drivers": [
+            { "factor": "通胀驱动", "contribution": 60, "trend": "neutral", "description": "高通胀导致名义收入增长，实际增长有限" },
+            { "factor": "订户增长", "contribution": 25, "trend": "positive", "description": "农村市场渗透率提升" },
+            { "factor": "汇率损失", "contribution": 15, "trend": "negative", "description": "津元大幅贬值侵蚀美元计价收入" }
+          ]
+        }
+      ],
+      "risks": [
+        { "risk": "恶性通胀", "severity": "critical", "probability": "high", "description": "津巴布韦通胀率超150%，严重影响实际盈利" },
+        { "risk": "外汇短缺", "severity": "high", "probability": "high", "description": "外汇严重短缺，难以进口设备" }
+      ],
+      "opportunities": []
+    },
+    "telkom": {
+      "latestQuarter": "2026Q2",
+      "metrics": [
+        {
+          "metric": "revenue",
+          "change": "-3.4%",
+          "drivers": [
+            { "factor": "固定电话衰退", "contribution": 50, "trend": "negative", "description": "传统固话业务持续萎缩" },
+            { "factor": "竞争压力", "contribution": 30, "trend": "negative", "description": "移动市场竞争激烈，价格战持续" },
+            { "factor": "企业业务", "contribution": 15, "trend": "positive", "description": "企业数据服务增长部分抵消" },
+            { "factor": "成本削减", "contribution": 5, "trend": "positive", "description": "重组裁员降低成本" }
+          ]
+        }
+      ],
+      "risks": [
+        { "risk": "业务转型", "severity": "high", "probability": "high", "description": "传统业务衰退快于新业务增长" }
+      ],
+      "opportunities": [
+        { "opportunity": "企业市场", "potential": "medium", "timeline": "ongoing", "description": "企业数字化转型带来机会" }
+      ]
+    },
+    "cellc": {
+      "latestQuarter": "2026Q2",
+      "metrics": [
+        {
+          "metric": "revenue",
+          "change": "-7.9%",
+          "drivers": [
+            { "factor": "订户流失", "contribution": 60, "trend": "negative", "description": "大规模订户流失至竞争对手" },
+            { "factor": "网络质量", "contribution": 25, "trend": "negative", "description": "网络覆盖和质量落后于竞争对手" },
+            { "factor": "资金短缺", "contribution": 15, "trend": "negative", "description": "资本开支不足，网络升级滞后" }
+          ]
+        }
+      ],
+      "risks": [
+        { "risk": "持续亏损", "severity": "critical", "probability": "high", "description": "现金流持续为负，生存压力" },
+        { "risk": "债务重组", "severity": "high", "probability": "medium", "description": "可能需要进一步债务重组" }
+      ],
+      "opportunities": []
     }
-  ]
+  }
 }

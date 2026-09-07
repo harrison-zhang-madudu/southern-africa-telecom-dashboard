@@ -35,6 +35,17 @@
           <div class="operator-header">
             <span class="operator-flag">{{ getFlag(operator.country) }}</span>
             <span class="operator-name">{{ operator.name }}</span>
+            <!-- 官网链接 -->
+            <a 
+              v-if="operator.website"
+              :href="operator.website"
+              target="_blank"
+              class="website-link"
+              title="访问官网"
+              @click.stop
+            >
+              🔗
+            </a>
           </div>
           <div class="operator-meta">
             <span class="country">{{ operator.country }}</span>
@@ -213,6 +224,21 @@ h3 {
   font-size: 14px;
   font-weight: 600;
   color: #f1f5f9;
+}
+
+.website-link {
+  margin-left: auto;
+  text-decoration: none;
+  font-size: 14px;
+  opacity: 0.6;
+  transition: opacity 0.2s;
+  padding: 2px 4px;
+  border-radius: 4px;
+}
+
+.website-link:hover {
+  opacity: 1;
+  background: rgba(59, 130, 246, 0.2);
 }
 
 .operator-meta {

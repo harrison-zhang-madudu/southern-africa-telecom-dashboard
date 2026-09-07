@@ -54,7 +54,7 @@ const initChart = () => {
       operatorData[d.operatorId] = []
     }
     operatorData[d.operatorId].push(d)
-    quarters.add(d.quarter)
+    quarters.add(d.period)
   })
   
   const quarterList = Array.from(quarters).sort()
@@ -64,7 +64,7 @@ const initChart = () => {
     const opData = operatorData[op.id] || []
     const dataMap = {}
     opData.forEach(d => {
-      dataMap[d.quarter] = d
+      dataMap[d.period] = d
     })
     
     const metricKey = getMetricKey(props.metricName)
